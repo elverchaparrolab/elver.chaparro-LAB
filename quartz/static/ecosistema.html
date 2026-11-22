@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Grafo interactivo de las cuatro líneas de trabajo de Elver Chaparro Cardozo, sus cruces y las plataformas donde crecen.">
+<title>Ecosistema de investigación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: grafo de fuerzas a pantalla completa (al estilo de la vista de grafo de Obsidian), barra de controles arriba y panel de detalle lateral */
+:root {
+  --bg: #15161c;
+  --surface: #1d1f27;
+  --surface-2: #262935;
+  --fg: #e7e8ef;
+  --muted: #9a9db2;
+  --edge: rgba(170, 176, 205, 0.22);
+  --edge-hi: rgba(210, 216, 240, 0.75);
+  --line: rgba(170, 176, 205, 0.16);
+  --c-core: #f1f2f7;
+  --c-cual: #4fc3a1;
+  --c-ia: #6fa8ff;
+  --c-vis: #f0b44c;
+  --c-cre: #ec7a9a;
+  --c-plat: #a89cf0;
+  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f4f5f8; --surface: #ffffff; --surface-2: #eceef4; --fg: #1b1d26; --muted: #5d6175;
+    --edge: rgba(60, 66, 95, 0.2); --edge-hi: rgba(30, 34, 55, 0.7); --line: rgba(60, 66, 95, 0.14);
+    --c-core: #1b1d26; --c-cual: #1f9a78; --c-ia: #2f6fd6; --c-vis: #b97c10; --c-cre: #c94570; --c-plat: #6d5ed6;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #f4f5f8; --surface: #ffffff; --surface-2: #eceef4; --fg: #1b1d26; --muted: #5d6175;
+  --edge: rgba(60, 66, 95, 0.2); --edge-hi: rgba(30, 34, 55, 0.7); --line: rgba(60, 66, 95, 0.14);
+  --c-core: #1b1d26; --c-cual: #1f9a78; --c-ia: #2f6fd6; --c-vis: #b97c10; --c-cre: #c94570; --c-plat: #6d5ed6;
+  color-scheme: light;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+html { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 14px;
+  display: flex; flex-direction: column; overflow: hidden;
+}
+header {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px;
+  padding-block: 14px 12px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; flex-direction: column; gap: 2px; min-width: 0; margin-right: auto; }
+.brand h1 { font-family: var(--font-display); font-weight: 600; font-size: 1.15rem; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+.brand p { margin: 0; color: var(--muted); font-size: 0.8rem; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.chip {
+  display: inline-flex; align-items: center; gap: 7px; padding: 6px 11px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--fg);
+  font: 500 0.78rem var(--font-body); cursor: pointer;
+}
+.chip .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--dot); }
+.chip[aria-pressed="false"] { opacity: 0.45; }
+.chip:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--c-ia); outline-offset: 2px; }
+.tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.search {
+  background: var(--surface); border: 1px solid var(--line); color: var(--fg); border-radius: 8px;
+  padding: 7px 10px; font: 0.8rem var(--font-body); width: 170px; max-width: 100%;
+}
+.btn {
+  background: var(--surface-2); border: 1px solid var(--line); color: var(--fg); border-radius: 8px;
+  padding: 7px 11px; font: 500 0.78rem var(--font-body); cursor: pointer;
+}
+.btn[aria-pressed="true"] { border-color: var(--c-ia); color: var(--c-ia); }
+main { position: relative; flex: 1; min-height: 0; }
+svg { width: 100%; height: 100%; display: block; cursor: grab; touch-action: none; }
+svg:active { cursor: grabbing; }
+.link { stroke: var(--edge); stroke-width: 1.1; fill: none; transition: stroke 0.15s, opacity 0.15s; }
+.link.cross { stroke-dasharray: 2 3; }
+.link.expansion { stroke-dasharray: 6 4; }
+.node circle { stroke: var(--bg); stroke-width: 2; cursor: pointer; transition: opacity 0.15s; }
+.node.expansion circle { fill-opacity: 0.15 !important; stroke: var(--c-plat); stroke-dasharray: 3 2; stroke-width: 1.5; }
+.node text {
+  fill: var(--fg); font-family: var(--font-body); font-size: 11px; pointer-events: none;
+  paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; transition: opacity 0.15s;
+}
+.node.line text { font-family: var(--font-display); font-weight: 600; font-size: 14px; }
+.node.core text { font-family: var(--font-display); font-weight: 600; font-size: 16px; }
+.dim { opacity: 0.12; }
+.link.hi { stroke: var(--edge-hi); stroke-width: 1.6; opacity: 1; }
+.legend {
+  position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  display: flex; flex-direction: column; gap: 5px; font: 0.72rem var(--font-mono); color: var(--muted);
+  background: color-mix(in srgb, var(--surface) 85%, transparent); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px;
+}
+.legend span { display: flex; align-items: center; gap: 8px; }
+.legend i { display: inline-block; width: 22px; border-top: 1.5px solid var(--muted); }
+.legend i.dash { border-top-style: dashed; }
+.legend i.dot2 { border-top-style: dotted; }
+.panel {
+  position: absolute; top: 14px; right: max(14px, env(safe-area-inset-right, 0px)); width: 320px; max-width: calc(100% - 28px);
+  max-height: calc(100% - 28px); overflow: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+  padding: 16px 16px 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+.panel .eyebrow { font: 500 0.7rem var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent, var(--muted)); }
+.panel h2 { margin: 0; font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; text-wrap: balance; }
+.panel p { margin: 0; line-height: 1.55; color: var(--fg); }
+.panel .status { font: 0.72rem var(--font-mono); color: var(--muted); }
+.panel ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.panel li button {
+  background: var(--surface-2); border: 1px solid var(--line); color: var(--fg); border-radius: 999px;
+  padding: 4px 10px; font: 0.75rem var(--font-body); cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+}
+.panel li button .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--dot); }
+.panel h3 { margin: 4px 0 0; font: 500 0.72rem var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.panel ol { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 4px; line-height: 1.45; }
+.panel a.go {
+  align-self: flex-start; color: var(--bg); background: var(--accent, var(--c-ia)); text-decoration: none;
+  font: 600 0.8rem var(--font-body); padding: 7px 12px; border-radius: 8px;
+}
+.panel .close { position: absolute; top: 10px; right: 10px; background: none; border: 0; color: var(--muted); font-size: 1.1rem; cursor: pointer; padding: 4px 8px; }
+.panel .hint { color: var(--muted); font-size: 0.75rem; }
+@media (max-width: 640px) {
+  .panel { top: auto; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); right: max(10px, env(safe-area-inset-right, 0px)); left: max(10px, env(safe-area-inset-left, 0px)); width: auto; max-width: none; max-height: 48%; }
+  .legend { display: none; }
+  .search { width: 130px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+</head>
+<body>
+<header>
+  <div class="brand">
+    <h1>Ecosistema de investigación · Elver Chaparro Cardozo</h1>
+    <p>Cuatro líneas de trabajo, sus cruces y las plataformas donde crecen. Pasa el cursor o toca un nodo.</p>
+  </div>
+  <div class="controls" id="filters" aria-label="Filtrar por línea"></div>
+  <div class="tools">
+    <input id="q" class="search" type="search" placeholder="Buscar nodo…" aria-label="Buscar nodo">
+    <button id="exp" class="btn" aria-pressed="true">Potencial en expansión</button>
+    <button id="grow" class="btn">Ver cómo crece</button>
+  </div>
+</header>
+<main>
+  <svg id="g" role="img" aria-label="Grafo interactivo de las líneas de trabajo y plataformas"></svg>
+  <div class="legend" aria-hidden="true">
+    <span><i></i>pertenece a</span>
+    <span><i class="dot2"></i>cruce entre líneas</span>
+    <span><i class="dash"></i>en expansión</span>
+  </div>
+  <aside class="panel" id="panel" aria-live="polite"></aside>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script>
+const SITE = "https://elverchaparrolab.wordpress.com";
+const GROUPS = {
+  core: { name: "Perfil", color: "--c-core" },
+  cual: { name: "Investigación cualitativa", color: "--c-cual" },
+  ia:   { name: "IA con criterio", color: "--c-ia" },
+  vis:  { name: "Estudios visuales", color: "--c-vis" },
+  cre:  { name: "Creación", color: "--c-cre" },
+  plat: { name: "Plataformas", color: "--c-plat" }
+};
+
+// Para agregar una plataforma o un tema: sumar un objeto aquí y sus vínculos abajo.
+const NODES = [
+  { id: "elver", label: "Elver Chaparro Cardozo", group: "core", kind: "core", stage: 0,
+    desc: "Investigador y docente. Experto en metodologías cualitativas, estudios visuales e investigación-creación, con énfasis en la integración de la inteligencia artificial en la investigación en ciencias sociales y humanas.",
+    url: SITE + "/acerca-de/" },
+
+  { id: "cual", label: "Investigación cualitativa", group: "cual", kind: "line", stage: 1,
+    desc: "Cursos, consultorías y herramientas abiertas para estudiantes de maestría y doctorado: de la matriz de coherencia al análisis de datos y la escritura de la tesis.",
+    url: SITE + "/investigacion-cualitativa/" },
+  { id: "ia", label: "IA con criterio", group: "ia", kind: "line", stage: 1,
+    desc: "Integración de la inteligencia artificial en las ciencias sociales y humanas. La IA generativa en cada fase de la investigación, sin ceder el criterio, la ética ni la autoría del investigador.",
+    outcomes: [
+      "Diseña prompts, loops y agentes de IA ajustados a cada fase de su proyecto de investigación.",
+      "Evalúa críticamente los resultados de la IA: verifica fuentes, detecta sesgos y alucinaciones, y los contrasta con la evidencia.",
+      "Integra la IA en la revisión sistemática y el análisis cualitativo con trazabilidad metodológica.",
+      "Argumenta sus decisiones éticas sobre autoría, privacidad de los datos y transparencia en el uso de la IA."
+    ],
+    url: "https://investigium.github.io/ruta-investigacion-ia/?v=3" },
+  { id: "vis", label: "Estudios visuales", group: "vis", kind: "line", stage: 1,
+    desc: "Las imágenes como objeto de estudio y como dato: cultura visual, regímenes de visualidad, educación artística y literacidad visual crítica.",
+    url: SITE + "/estudios-visuales/" },
+  { id: "cre", label: "Creación", group: "cre", kind: "line", stage: 1,
+    desc: "El archivo como práctica artística y procesos de investigación-creación, incluidos los procesos formativos con estudiantes.",
+    url: SITE + "/creacion/" },
+
+  { id: "metodologias", label: "Metodologías de investigación", group: "cual", kind: "topic", stage: 2, desc: "Enfoques, diseños y rutas metodológicas para la investigación cualitativa.", url: SITE + "/metodologias/" },
+  { id: "herramientas", label: "ATLAS.ti · ASReview · VOSviewer", group: "cual", kind: "topic", stage: 2, desc: "Herramientas para revisión sistemática, análisis bibliométrico y codificación cualitativa.", url: SITE + "/contenido/" },
+  { id: "consultorias", label: "Consultorías", group: "cual", kind: "topic", stage: 2, desc: "Acompañamiento a tesis de maestría y doctorado, con cita previa.", url: SITE + "/consultorias/" },
+  { id: "matriz", label: "Matriz de coherencia", group: "cual", kind: "topic", stage: 2, desc: "Nota del jardín digital: alinear problema, preguntas, objetivos y método.", url: "https://elvervisual.github.io/elver.chaparro-LAB/notas/matriz-de-coherencia" },
+  { id: "zettel", label: "Zettelkasten", group: "cual", kind: "topic", stage: 2, desc: "Nota del jardín digital: el fichero de Luhmann como método para pensar y escribir investigación.", url: "https://elvervisual.github.io/elver.chaparro-LAB/notas/zettelkasten" },
+
+  { id: "ruta", label: "Ruta de investigación con IA", group: "ia", kind: "topic", stage: 2, desc: "Siete pasos para planear una tesis con apoyo de IA, con descarga en Word.", url: "https://investigium.github.io/ruta-investigacion-ia/?v=3" },
+  { id: "prompts", label: "Prompts, loops y agentes", group: "ia", kind: "topic", stage: 2, desc: "Qué son, cómo operan en un proyecto de investigación y cómo redactarlos, con plantillas.", url: "https://investigium.github.io/ruta-investigacion-ia/prompts-y-agentes.html#inicio" },
+  { id: "labcual", label: "Laboratorio de análisis cualitativo", group: "ia", kind: "topic", stage: 2, desc: "Tablero para comprender modelos de análisis cualitativo.", url: "https://elvervisual.github.io/qualitative-analysis/" },
+  { id: "etica", label: "Ética, autoría y transparencia", group: "ia", kind: "topic", stage: 2, desc: "Criterios para declarar el uso de IA, proteger los datos de los participantes y conservar la autoría.", url: "https://elvervisual.github.io/elver.chaparro-LAB/notas/ia-con-criterio" },
+
+  { id: "cultura", label: "Cultura visual", group: "vis", kind: "topic", stage: 2, desc: "Investigación en cultura visual y regímenes de visualidad.", url: SITE + "/cultura-visual/" },
+  { id: "imagenes", label: "Investigación con imágenes", group: "vis", kind: "topic", stage: 2, desc: "Métodos visuales: la imagen como técnica de producción y análisis de datos.", url: SITE + "/investigacion-con-imagenes/" },
+  { id: "arteedu", label: "Arte-educación", group: "vis", kind: "topic", stage: 2, desc: "Educación artística y literacidad visual crítica.", url: SITE + "/arte-educacion/" },
+  { id: "imgdato", label: "Imagen como dato", group: "vis", kind: "topic", stage: 2, desc: "Nota del jardín digital: cómo tratar las imágenes como datos de investigación, también con visión computacional.", url: "https://elvervisual.github.io/elver.chaparro-LAB/notas/imagen-como-dato" },
+
+  { id: "archivo", label: "El archivo como práctica artística", group: "cre", kind: "topic", stage: 2, desc: "El archivo como material, método y obra.", url: SITE + "/creacion/" },
+  { id: "invcre", label: "Investigación-creación", group: "cre", kind: "topic", stage: 2, desc: "La creación como forma de producir conocimiento.", url: SITE + "/investigacion-creacion/" },
+  { id: "formativos", label: "Procesos formativos con estudiantes", group: "cre", kind: "topic", stage: 2, desc: "Procesos de investigación-creación desarrollados con estudiantes.", url: SITE + "/creacion/" },
+
+  { id: "web", label: "Sitio web", group: "plat", kind: "platform", stage: 3, desc: "La página principal: elverchaparroLAB.wordpress.com, que pasará a elverchaparro.com.", url: SITE },
+  { id: "github", label: "GitHub", group: "plat", kind: "platform", stage: 3, desc: "Repositorios y herramientas abiertas publicadas con GitHub Pages.", url: "https://github.com/elvervisual" },
+  { id: "jardin", label: "Jardín digital · Obsidian", group: "plat", kind: "platform", stage: 3, desc: "Notas en proceso escritas en Obsidian y publicadas con Quartz.", url: "https://elvervisual.github.io/elver.chaparro-LAB/" },
+  { id: "scholar", label: "Google Scholar", group: "plat", kind: "platform", stage: 3, desc: "Publicaciones y citas.", url: "https://scholar.google.com/citations?hl=es&user=ZXOKubwAAAAJ" },
+  { id: "cvlac", label: "CvLAC · Minciencias", group: "plat", kind: "platform", stage: 3, desc: "Hoja de vida académica en Minciencias.", url: "https://scienti.minciencias.gov.co/cvlac/visualizador/generarCurriculoCv.do?cod_rh=0000472603" },
+  { id: "linkedin", label: "LinkedIn", group: "plat", kind: "platform", stage: 3, desc: "Perfil profesional (UNAD).", url: "https://www.linkedin.com/in/elver-chaparro-26544a100/" },
+  { id: "instagram", label: "Instagram", group: "plat", kind: "platform", stage: 3, desc: "Registro visual de procesos.", url: "https://www.instagram.com/investigium.lab/" },
+  { id: "x", label: "X", group: "plat", kind: "platform", stage: 3, desc: "Difusión breve.", url: "https://x.com/investigiumlab" },
+
+  { id: "hf", label: "Hugging Face", group: "plat", kind: "platform", stage: 4, expansion: true, desc: "En expansión: modelos, datasets y demos (Spaces) para análisis cualitativo y de imágenes, enlazados con GitHub.", url: "https://huggingface.co/" },
+  { id: "zotero", label: "Zotero", group: "plat", kind: "platform", stage: 4, expansion: true, desc: "En expansión: bibliotecas compartidas conectadas con el jardín digital y la revisión sistemática.", url: "https://www.zotero.org/" },
+  { id: "agentesinv", label: "Agentes de investigación", group: "ia", kind: "topic", stage: 4, expansion: true, desc: "En expansión: agentes que acompañan fases concretas del proceso (búsqueda, codificación, escritura) con supervisión del investigador.", url: "https://investigium.github.io/ruta-investigacion-ia/prompts-y-agentes.html#inicio" },
+  { id: "vision", label: "Visión computacional para estudios visuales", group: "vis", kind: "topic", stage: 4, expansion: true, desc: "En expansión: análisis de corpus de imágenes con modelos abiertos, cruzando estudios visuales e IA.", url: "https://huggingface.co/" }
+];
+
+const LINKS = [
+  ["elver","cual"],["elver","ia"],["elver","vis"],["elver","cre"],["elver","web"],
+  ["cual","metodologias"],["cual","herramientas"],["cual","consultorias"],["cual","matriz"],["cual","zettel"],
+  ["ia","ruta"],["ia","prompts"],["ia","labcual"],["ia","etica"],
+  ["vis","cultura"],["vis","imagenes"],["vis","arteedu"],["vis","imgdato"],
+  ["cre","archivo"],["cre","invcre"],["cre","formativos"],
+  // cruces entre líneas
+  ["ia","cual","cross","Análisis cualitativo asistido por IA"],["labcual","cual","cross"],["herramientas","ia","cross"],
+  ["imgdato","ia","cross","La imagen como dato para modelos de IA"],["archivo","cultura","cross"],["invcre","metodologias","cross"],
+  ["formativos","arteedu","cross"],["imagenes","invcre","cross"],["ruta","matriz","cross"],
+  // plataformas
+  ["github","ruta"],["github","prompts"],["github","labcual"],["github","jardin"],
+  ["jardin","zettel"],["jardin","matriz"],["jardin","imgdato"],["jardin","etica"],
+  ["scholar","vis"],["scholar","cual"],["cvlac","scholar"],["linkedin","elver"],["instagram","cre"],["x","elver"],
+  ["web","cual"],["web","vis"],["web","cre"],
+  // en expansión
+  ["hf","ia","expansion"],["hf","github","expansion"],["hf","vision","expansion"],["zotero","herramientas","expansion"],["zotero","jardin","expansion"],
+  ["agentesinv","ia","expansion"],["agentesinv","prompts","expansion"],["vision","vis","expansion"],["vision","imgdato","expansion"]
+];
+
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const colorOf = d => css(GROUPS[d.group].color);
+const byId = new Map(NODES.map(n => [n.id, n]));
+const links = LINKS.map(([s, t, type, label]) => ({ source: s, target: t, type: type || (byId.get(t)?.expansion || byId.get(s)?.expansion ? "expansion" : "tree"), label }));
+const neighbors = new Map(NODES.map(n => [n.id, new Set()]));
+links.forEach(l => { neighbors.get(l.source).add(l.target); neighbors.get(l.target).add(l.source); });
+NODES.forEach(n => n.degree = neighbors.get(n.id).size);
+const radius = d => d.kind === "core" ? 16 : d.kind === "line" ? 12 : 4 + Math.min(d.degree, 6) * 0.9;
+
+const state = { groups: new Set(Object.keys(GROUPS)), expansion: true, selected: null, stageMax: 4, query: "" };
+
+const svg = d3.select("#g");
+const root = svg.append("g");
+const linkG = root.append("g");
+const nodeG = root.append("g");
+let zoomK = 1;
+const zoom = d3.zoom().scaleExtent([0.3, 4]).on("zoom", e => { root.attr("transform", e.transform); zoomK = e.transform.k; updateLabels(); });
+svg.call(zoom).on("dblclick.zoom", null);
+
+const sim = d3.forceSimulation(NODES)
+  .force("link", d3.forceLink(links).id(d => d.id).distance(l => {
+    const a = l.source.kind, b = l.target.kind;
+    if (a === "core" || b === "core") return 120;
+    if (l.type === "cross") return 150;
+    return a === "line" || b === "line" ? 70 : 95;
+  }).strength(l => l.type === "cross" ? 0.12 : 0.6))
+  .force("charge", d3.forceManyBody().strength(d => d.kind === "core" ? -900 : d.kind === "line" ? -500 : -170))
+  .force("collide", d3.forceCollide().radius(d => radius(d) + 8))
+  .force("center", d3.forceCenter(0, 0))
+  .force("x", d3.forceX(0).strength(0.03)).force("y", d3.forceY(0).strength(0.04));
+
+let linkSel = linkG.selectAll("line"), nodeSel = nodeG.selectAll("g");
+
+function visible(d) {
+  if (d.stage > state.stageMax) return false;
+  if (d.expansion && !state.expansion) return false;
+  if (d.kind === "core") return true;
+  return state.groups.has(d.group);
+}
+
+function render() {
+  const vNodes = NODES.filter(visible);
+  const vIds = new Set(vNodes.map(n => n.id));
+  const vLinks = links.filter(l => vIds.has(l.source.id || l.source) && vIds.has(l.target.id || l.target));
+
+  linkSel = linkG.selectAll("line").data(vLinks, l => (l.source.id || l.source) + ">" + (l.target.id || l.target))
+    .join(enter => enter.append("line").attr("stroke-opacity", 0).call(e => e.transition().duration(500).attr("stroke-opacity", 1)))
+    .attr("class", l => "link " + (l.type === "cross" ? "cross" : l.type === "expansion" ? "expansion" : ""));
+
+  nodeSel = nodeG.selectAll("g.node").data(vNodes, d => d.id)
+    .join(enter => {
+      const g = enter.append("g").attr("tabindex", 0).attr("role", "button").attr("aria-label", d => d.label);
+      g.append("circle").attr("r", 0).transition().duration(500).attr("r", radius);
+      g.append("text").attr("dy", d => radius(d) + 13).attr("text-anchor", "middle").text(d => d.label);
+      g.on("mouseenter", (e, d) => highlight(d)).on("mouseleave", () => highlight(state.selected))
+       .on("click", (e, d) => { e.stopPropagation(); select(d); })
+       .on("keydown", (e, d) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(d); } })
+       .call(d3.drag()
+         .on("start", (e, d) => { if (!e.active) sim.alphaTarget(0.25).restart(); d.fx = d.x; d.fy = d.y; })
+         .on("drag", (e, d) => { d.fx = e.x; d.fy = e.y; })
+         .on("end", (e, d) => { if (!e.active) sim.alphaTarget(0); d.fx = null; d.fy = null; }));
+      return g;
+    })
+    .attr("class", d => `node ${d.kind}${d.expansion ? " expansion" : ""}`);
+  nodeSel.select("circle").attr("fill", colorOf);
+
+  sim.nodes(vNodes);
+  sim.force("link").links(vLinks);
+  sim.alpha(0.6).restart();
+  highlight(state.selected && vIds.has(state.selected.id) ? state.selected : null);
+  updateLabels();
+}
+
+sim.on("tick", () => {
+  linkSel.attr("x1", l => l.source.x).attr("y1", l => l.source.y).attr("x2", l => l.target.x).attr("y2", l => l.target.y);
+  nodeSel.attr("transform", d => `translate(${d.x},${d.y})`);
+});
+
+function updateLabels() {
+  const focus = state.selected || state.hover;
+  const near = focus ? neighbors.get(focus.id) : null;
+  nodeSel.select("text").style("opacity", d => {
+    if (d.kind !== "topic" && d.kind !== "platform") return 1;
+    if (focus && (d.id === focus.id || near.has(d.id))) return 1;
+    if (state.query && matches(d)) return 1;
+    return zoomK >= 1.05 ? 1 : zoomK >= 0.8 ? 0.55 : 0;
+  });
+}
+
+const matches = d => d.label.toLowerCase().includes(state.query) || (d.desc || "").toLowerCase().includes(state.query);
+
+function highlight(d) {
+  state.hover = d;
+  const q = state.query;
+  if (!d && !q) { nodeSel.classed("dim", false); linkSel.classed("dim", false).classed("hi", false); updateLabels(); return; }
+  if (!d && q) {
+    nodeSel.classed("dim", n => !matches(n));
+    linkSel.classed("dim", true).classed("hi", false); updateLabels(); return;
+  }
+  const near = neighbors.get(d.id);
+  nodeSel.classed("dim", n => n.id !== d.id && !near.has(n.id));
+  linkSel.classed("hi", l => l.source.id === d.id || l.target.id === d.id)
+         .classed("dim", l => !(l.source.id === d.id || l.target.id === d.id));
+  updateLabels();
+}
+
+const panel = document.getElementById("panel");
+function intro() {
+  panel.style.setProperty("--accent", css("--c-ia"));
+  panel.innerHTML = `
+    <span class="eyebrow">Cómo leer el grafo</span>
+    <h2>Cuatro líneas que se cruzan</h2>
+    <p>Cada color es una línea de trabajo. Las líneas punteadas muestran dónde se cruzan: la IA atraviesa el análisis cualitativo y el estudio de las imágenes; la creación dialoga con la cultura visual.</p>
+    <p>Los nodos violeta son plataformas. Los de borde discontinuo están en expansión, como Hugging Face.</p>
+    <p class="hint">Arrastra para mover, usa la rueda o los dedos para acercar y toca un nodo para ver su detalle.</p>`;
+}
+function select(d) {
+  state.selected = d;
+  highlight(d);
+  const accent = colorOf(d);
+  panel.style.setProperty("--accent", accent);
+  const near = [...neighbors.get(d.id)].map(id => byId.get(id)).filter(visible);
+  const outcomes = d.outcomes ? `<h3>Resultados de aprendizaje</h3><ol>${d.outcomes.map(o => `<li>${o}</li>`).join("")}</ol>` : "";
+  panel.innerHTML = `
+    <button class="close" aria-label="Cerrar detalle">×</button>
+    <span class="eyebrow">${GROUPS[d.group].name}${d.kind === "line" ? " · línea de trabajo" : ""}</span>
+    <h2>${d.label}</h2>
+    <span class="status">${d.expansion ? "En expansión" : "Activo"} · ${d.degree} conexiones</span>
+    <p>${d.desc}</p>
+    ${outcomes}
+    <h3>Conecta con</h3>
+    <ul>${near.map(n => `<li><button data-id="${n.id}"><span class="dot" style="--dot:${colorOf(n)}"></span>${n.label}</button></li>`).join("")}</ul>
+    ${d.url ? `<a class="go" href="${d.url}" target="_blank" rel="noopener">Abrir ${d.kind === "platform" ? "plataforma" : "página"} ↗</a>` : ""}`;
+  panel.querySelector(".close").onclick = () => { state.selected = null; highlight(null); intro(); };
+  panel.querySelectorAll("li button").forEach(b => b.onclick = () => {
+    const n = byId.get(b.dataset.id); select(n);
+    const t = d3.zoomTransform(svg.node());
+    svg.transition().duration(600).call(zoom.translateTo, n.x, n.y);
+  });
+}
+svg.on("click", () => { state.selected = null; highlight(null); intro(); });
+
+// filtros por línea
+const filters = document.getElementById("filters");
+["cual","ia","vis","cre","plat"].forEach(g => {
+  const b = document.createElement("button");
+  b.className = "chip"; b.setAttribute("aria-pressed", "true");
+  b.innerHTML = `<span class="dot" style="--dot:var(${GROUPS[g].color})"></span>${GROUPS[g].name}`;
+  b.onclick = () => {
+    const on = state.groups.has(g);
+    on ? state.groups.delete(g) : state.groups.add(g);
+    b.setAttribute("aria-pressed", String(!on));
+    render();
+  };
+  filters.appendChild(b);
+});
+
+document.getElementById("exp").onclick = e => {
+  state.expansion = !state.expansion;
+  e.currentTarget.setAttribute("aria-pressed", String(state.expansion));
+  render();
+};
+
+document.getElementById("q").addEventListener("input", e => {
+  state.query = e.target.value.trim().toLowerCase();
+  state.selected = null; highlight(null);
+});
+
+let growing = false;
+document.getElementById("grow").onclick = async () => {
+  if (growing) return; growing = true;
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  for (let s = 0; s <= 4; s++) {
+    state.stageMax = s; render();
+    if (!reduce) await new Promise(r => setTimeout(r, 900));
+  }
+  growing = false;
+};
+
+function fit() {
+  const { width, height } = svg.node().getBoundingClientRect();
+  const k = Math.min(1, Math.max(0.55, Math.min(width, height) / 760));
+  svg.call(zoom.transform, d3.zoomIdentity.translate(width / 2, height / 2).scale(k));
+}
+window.addEventListener("resize", fit);
+// reaplica colores al cambiar el tema
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => nodeSel.select("circle").attr("fill", colorOf));
+new MutationObserver(() => nodeSel.select("circle").attr("fill", colorOf)).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+render(); fit(); intro();
+sim.tick(120); sim.alpha(0.3).restart();
+</script>
+
+</body>
+</html>
