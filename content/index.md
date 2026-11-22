@@ -13,6 +13,12 @@ Soy Elver Chaparro, investigador y docente. Mi sitio principal está en [elverch
 - [[notas/ia-con-criterio|IA con criterio en la investigación]]
 - [[notas/imagen-como-dato|La imagen como dato]]
 
+## Commonplace Book
+
+Mis notas de lectura y materiales de curso, sincronizados desde Obsidian:
+
+- [[commonplace/index|Entrar al Commonplace Book]]: cultura visual y estudios de la imagen, educación artística y problemas contemporáneos, y Zettelkasten.
+
 ## Cómo leer este jardín
 
 Cada nota enlaza con otras. Al final de cada página verás las notas que la mencionan, y el grafo muestra cómo se relacionan. Las notas tienen fecha de última edición porque siguen creciendo.
