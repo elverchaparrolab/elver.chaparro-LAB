@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Grafo interactivo de las cuatro líneas de trabajo de Elver Chaparro Cardozo, sus cruces y las plataformas donde crecen.">
-<title>Ecosistema de investigación</title>
+<meta name="description" content="Ecosistema conceptual: cómo se construye un pensamiento desde la investigación, la práctica y la enseñanza.">
+<title>Ecosistema conceptual</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -87,12 +87,14 @@ svg:active { cursor: grabbing; }
 .link.cross { stroke-dasharray: 2 3; }
 .link.expansion { stroke-dasharray: 6 4; }
 .node circle { stroke: var(--bg); stroke-width: 2; cursor: pointer; transition: opacity 0.15s; }
-.node.expansion circle { fill-opacity: 0.15 !important; stroke: var(--c-plat); stroke-dasharray: 3 2; stroke-width: 1.5; }
+.node.expansion circle { fill-opacity: 0.15 !important; stroke: var(--muted); stroke-dasharray: 3 2; stroke-width: 1.5; }
 .node text {
   fill: var(--fg); font-family: var(--font-body); font-size: 11px; pointer-events: none;
   paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; transition: opacity 0.15s;
 }
-.node.line text { font-family: var(--font-display); font-weight: 600; font-size: 14px; }
+.node.line text { font-family: var(--font-display); font-weight: 600; font-size: 13px; }
+.node.pole text { font-family: var(--font-display); font-weight: 600; font-size: 15px; letter-spacing: 0.02em; }
+.link.eje { stroke-width: 1.6; stroke-opacity: 0.8; }
 .node.core text { font-family: var(--font-display); font-weight: 600; font-size: 16px; }
 .dim { opacity: 0.12; }
 .link.hi { stroke: var(--edge-hi); stroke-width: 1.6; opacity: 1; }
@@ -104,6 +106,7 @@ svg:active { cursor: grabbing; }
 .legend span { display: flex; align-items: center; gap: 8px; }
 .legend i { display: inline-block; width: 22px; border-top: 1.5px solid var(--muted); }
 .legend i.dash { border-top-style: dashed; }
+.legend i.thick { border-top-width: 2.5px; }
 .legend i.dot2 { border-top-style: dotted; }
 .panel {
   position: absolute; top: 14px; right: max(14px, env(safe-area-inset-right, 0px)); width: 320px; max-width: calc(100% - 28px);
@@ -140,20 +143,21 @@ svg:active { cursor: grabbing; }
 <body>
 <header>
   <div class="brand">
-    <h1>Ecosistema de investigación · Elver Chaparro Cardozo</h1>
-    <p>Cuatro líneas de trabajo, sus cruces y las plataformas donde crecen. Pasa el cursor o toca un nodo.</p>
+    <h1>Ecosistema conceptual</h1>
+    <p>Cómo se construye un pensamiento desde la investigación, la práctica y la enseñanza. Pasa el cursor o toca un concepto.</p>
   </div>
   <div class="controls" id="filters" aria-label="Filtrar por línea"></div>
   <div class="tools">
-    <input id="q" class="search" type="search" placeholder="Buscar nodo…" aria-label="Buscar nodo">
+    <input id="q" class="search" type="search" placeholder="Buscar concepto…" aria-label="Buscar concepto">
     <button id="exp" class="btn" aria-pressed="true">Potencial en expansión</button>
     <button id="grow" class="btn">Ver cómo crece</button>
   </div>
 </header>
 <main>
-  <svg id="g" role="img" aria-label="Grafo interactivo de las líneas de trabajo y plataformas"></svg>
+  <svg id="g" role="img" aria-label="Grafo interactivo del sistema conceptual"></svg>
   <div class="legend" aria-hidden="true">
     <span><i></i>pertenece a</span>
+    <span><i class="thick"></i>eje del pensamiento</span>
     <span><i class="dot2"></i>cruce entre líneas</span>
     <span><i class="dash"></i>en expansión</span>
   </div>
@@ -163,93 +167,101 @@ svg:active { cursor: grabbing; }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script>
 const SITE = "https://elverchaparrolab.wordpress.com";
+const GARDEN = "https://elvervisual.github.io/elver.chaparro-LAB/notas/";
 const GROUPS = {
-  core: { name: "Perfil", color: "--c-core" },
-  cual: { name: "Investigación cualitativa", color: "--c-cual" },
+  eje:  { name: "Ejes del pensamiento", color: "--c-core" },
+  cual: { name: "Metodologías cualitativas", color: "--c-cual" },
   ia:   { name: "IA con criterio", color: "--c-ia" },
   vis:  { name: "Estudios visuales", color: "--c-vis" },
-  cre:  { name: "Creación", color: "--c-cre" },
-  plat: { name: "Plataformas", color: "--c-plat" }
+  cre:  { name: "Investigación-creación", color: "--c-cre" }
 };
 
-// Para agregar una plataforma o un tema: sumar un objeto aquí y sus vínculos abajo.
+// Sistema conceptual. Para agregar un concepto: sumar un objeto aquí y sus vínculos abajo.
 const NODES = [
-  { id: "elver", label: "Elver Chaparro Cardozo", group: "core", kind: "core", stage: 0,
-    desc: "Investigador y docente. Experto en metodologías cualitativas, estudios visuales e investigación-creación, con énfasis en la integración de la inteligencia artificial en la investigación en ciencias sociales y humanas.",
-    url: SITE + "/acerca-de/" },
+  { id: "pensamiento", label: "Construcción de pensamiento", group: "eje", kind: "core", stage: 0,
+    desc: "El centro del sistema: un pensamiento propio que se construye en el ir y venir entre investigar, practicar y enseñar." },
+  { id: "investigacion", label: "Investigación", group: "eje", kind: "pole", stage: 0,
+    desc: "Preguntar, indagar y producir conocimiento con rigor y criterio propio." },
+  { id: "practica", label: "Práctica", group: "eje", kind: "pole", stage: 0,
+    desc: "Hacer y crear: la práctica artística y profesional como lugar donde también se piensa." },
+  { id: "ensenanza", label: "Enseñanza", group: "eje", kind: "pole", stage: 0,
+    desc: "Formar a otros y aprender con ellos: el aula como laboratorio de pensamiento." },
 
-  { id: "cual", label: "Investigación cualitativa", group: "cual", kind: "line", stage: 1,
-    desc: "Cursos, consultorías y herramientas abiertas para estudiantes de maestría y doctorado: de la matriz de coherencia al análisis de datos y la escritura de la tesis.",
-    url: SITE + "/investigacion-cualitativa/" },
+  { id: "cual", label: "Metodologías cualitativas", group: "cual", kind: "line", stage: 1,
+    desc: "Comprender la experiencia humana desde los sentidos que las personas le dan: diseño, trabajo de campo, análisis y escritura.", url: SITE + "/investigacion-cualitativa/" },
   { id: "ia", label: "IA con criterio", group: "ia", kind: "line", stage: 1,
-    desc: "Integración de la inteligencia artificial en las ciencias sociales y humanas. La IA generativa en cada fase de la investigación, sin ceder el criterio, la ética ni la autoría del investigador.",
+    desc: "Integración de la inteligencia artificial en las ciencias sociales y humanas, sin ceder el criterio, la ética ni la autoría del investigador.",
     outcomes: [
       "Diseña prompts, loops y agentes de IA ajustados a cada fase de su proyecto de investigación.",
       "Evalúa críticamente los resultados de la IA: verifica fuentes, detecta sesgos y alucinaciones, y los contrasta con la evidencia.",
       "Integra la IA en la revisión sistemática y el análisis cualitativo con trazabilidad metodológica.",
       "Argumenta sus decisiones éticas sobre autoría, privacidad de los datos y transparencia en el uso de la IA."
-    ],
-    url: "https://investigium.github.io/ruta-investigacion-ia/?v=3" },
+    ], url: "https://investigium.github.io/ruta-investigacion-ia/?v=3" },
   { id: "vis", label: "Estudios visuales", group: "vis", kind: "line", stage: 1,
-    desc: "Las imágenes como objeto de estudio y como dato: cultura visual, regímenes de visualidad, educación artística y literacidad visual crítica.",
-    url: SITE + "/estudios-visuales/" },
-  { id: "cre", label: "Creación", group: "cre", kind: "line", stage: 1,
-    desc: "El archivo como práctica artística y procesos de investigación-creación, incluidos los procesos formativos con estudiantes.",
-    url: SITE + "/creacion/" },
+    desc: "Las imágenes como objeto de estudio y como dato: qué muestran, qué ocultan y cómo nos enseñan a mirar.", url: SITE + "/estudios-visuales/" },
+  { id: "cre", label: "Investigación-creación", group: "cre", kind: "line", stage: 1,
+    desc: "La creación como forma de producir conocimiento: el proceso y la obra también investigan.", url: SITE + "/investigacion-creacion/" },
 
-  { id: "metodologias", label: "Metodologías de investigación", group: "cual", kind: "topic", stage: 2, desc: "Enfoques, diseños y rutas metodológicas para la investigación cualitativa.", url: SITE + "/metodologias/" },
-  { id: "herramientas", label: "ATLAS.ti · ASReview · VOSviewer", group: "cual", kind: "topic", stage: 2, desc: "Herramientas para revisión sistemática, análisis bibliométrico y codificación cualitativa.", url: SITE + "/contenido/" },
-  { id: "consultorias", label: "Consultorías", group: "cual", kind: "topic", stage: 2, desc: "Acompañamiento a tesis de maestría y doctorado, con cita previa.", url: SITE + "/consultorias/" },
-  { id: "matriz", label: "Matriz de coherencia", group: "cual", kind: "topic", stage: 2, desc: "Nota del jardín digital: alinear problema, preguntas, objetivos y método.", url: "https://elvervisual.github.io/elver.chaparro-LAB/notas/matriz-de-coherencia" },
-  { id: "zettel", label: "Zettelkasten", group: "cual", kind: "topic", stage: 2, desc: "Nota del jardín digital: el fichero de Luhmann como método para pensar y escribir investigación.", url: "https://elvervisual.github.io/elver.chaparro-LAB/notas/zettelkasten" },
+  { id: "matriz", label: "Matriz de coherencia", group: "cual", kind: "topic", stage: 2, desc: "Alinear problema, preguntas, objetivos, categorías y método.", url: GARDEN + "matriz-de-coherencia" },
+  { id: "codificacion", label: "Codificación y categorización", group: "cual", kind: "topic", stage: 2, desc: "Del dato al código y del código a la categoría: el corazón del análisis cualitativo." },
+  { id: "hermeneutica", label: "Interpretación hermenéutica", group: "cual", kind: "topic", stage: 2, desc: "Comprender los sentidos de un texto, una imagen o una práctica en su contexto." },
+  { id: "teoriafund", label: "Teoría fundamentada", group: "cual", kind: "topic", stage: 2, desc: "Construir teoría desde los datos mediante comparación constante." },
+  { id: "etnografia", label: "Etnografía y trabajo de campo", group: "cual", kind: "topic", stage: 2, desc: "Estar ahí: observar, conversar y registrar la vida cotidiana." },
+  { id: "revision", label: "Revisión sistemática", group: "cual", kind: "topic", stage: 2, desc: "Buscar, filtrar y sintetizar la literatura con un protocolo explícito." },
+  { id: "triangulacion", label: "Triangulación", group: "cual", kind: "topic", stage: 2, desc: "Contrastar fuentes, técnicas e investigadores para dar solidez a la interpretación." },
+  { id: "reflexividad", label: "Reflexividad", group: "cual", kind: "topic", stage: 2, desc: "Reconocer el lugar desde el que investiga quien investiga." },
+  { id: "formacion", label: "Formación de investigadores", group: "cual", kind: "topic", stage: 2, desc: "Acompañar a estudiantes de maestría y doctorado a construir su propio camino investigativo." },
+  { id: "escritura", label: "Escritura académica", group: "cual", kind: "topic", stage: 2, desc: "Escribir para pensar: la tesis como proceso y no solo como producto." },
+  { id: "zettel", label: "Zettelkasten", group: "cual", kind: "topic", stage: 2, desc: "El fichero de Luhmann: notas conectadas que hacen crecer las ideas.", url: GARDEN + "zettelkasten" },
 
-  { id: "ruta", label: "Ruta de investigación con IA", group: "ia", kind: "topic", stage: 2, desc: "Siete pasos para planear una tesis con apoyo de IA, con descarga en Word.", url: "https://investigium.github.io/ruta-investigacion-ia/?v=3" },
-  { id: "prompts", label: "Prompts, loops y agentes", group: "ia", kind: "topic", stage: 2, desc: "Qué son, cómo operan en un proyecto de investigación y cómo redactarlos, con plantillas.", url: "https://investigium.github.io/ruta-investigacion-ia/prompts-y-agentes.html#inicio" },
-  { id: "labcual", label: "Laboratorio de análisis cualitativo", group: "ia", kind: "topic", stage: 2, desc: "Tablero para comprender modelos de análisis cualitativo.", url: "https://elvervisual.github.io/qualitative-analysis/" },
-  { id: "etica", label: "Ética, autoría y transparencia", group: "ia", kind: "topic", stage: 2, desc: "Criterios para declarar el uso de IA, proteger los datos de los participantes y conservar la autoría.", url: "https://elvervisual.github.io/elver.chaparro-LAB/notas/ia-con-criterio" },
+  { id: "prompts", label: "Prompts, loops y agentes", group: "ia", kind: "topic", stage: 2, desc: "Cómo dialogar con la IA y automatizar tareas sin perder el control del proceso.", url: "https://investigium.github.io/ruta-investigacion-ia/prompts-y-agentes.html#inicio" },
+  { id: "analisisia", label: "Análisis asistido por IA", group: "ia", kind: "topic", stage: 2, desc: "La IA como apoyo para codificar, resumir y comparar, siempre bajo la mirada del investigador." },
+  { id: "critico", label: "Pensamiento crítico ante la IA", group: "ia", kind: "topic", stage: 2, desc: "Preguntar qué sabe la IA, de dónde lo sabe y qué deja por fuera.", url: GARDEN + "ia-con-criterio" },
+  { id: "sesgos", label: "Sesgos y alucinaciones", group: "ia", kind: "topic", stage: 2, desc: "Reconocer los errores y los sesgos de los modelos antes de que entren en la investigación." },
+  { id: "etica", label: "Ética, autoría y transparencia", group: "ia", kind: "topic", stage: 2, desc: "Declarar el uso de la IA, proteger a los participantes y conservar la autoría." },
+  { id: "trazabilidad", label: "Trazabilidad metodológica", group: "ia", kind: "topic", stage: 2, desc: "Dejar registro de cada decisión tomada con ayuda de la IA." },
 
-  { id: "cultura", label: "Cultura visual", group: "vis", kind: "topic", stage: 2, desc: "Investigación en cultura visual y regímenes de visualidad.", url: SITE + "/cultura-visual/" },
-  { id: "imagenes", label: "Investigación con imágenes", group: "vis", kind: "topic", stage: 2, desc: "Métodos visuales: la imagen como técnica de producción y análisis de datos.", url: SITE + "/investigacion-con-imagenes/" },
-  { id: "arteedu", label: "Arte-educación", group: "vis", kind: "topic", stage: 2, desc: "Educación artística y literacidad visual crítica.", url: SITE + "/arte-educacion/" },
-  { id: "imgdato", label: "Imagen como dato", group: "vis", kind: "topic", stage: 2, desc: "Nota del jardín digital: cómo tratar las imágenes como datos de investigación, también con visión computacional.", url: "https://elvervisual.github.io/elver.chaparro-LAB/notas/imagen-como-dato" },
+  { id: "cultura", label: "Cultura visual", group: "vis", kind: "topic", stage: 2, desc: "Las imágenes como parte de la vida social: quién mira, qué se ve y cómo.", url: SITE + "/cultura-visual/" },
+  { id: "regimenes", label: "Regímenes de visualidad", group: "vis", kind: "topic", stage: 2, desc: "Las reglas, a menudo invisibles, que organizan lo que una época puede ver." },
+  { id: "imgdato", label: "Imagen como dato", group: "vis", kind: "topic", stage: 2, desc: "Tratar las imágenes como datos de investigación: registro, corpus y análisis.", url: GARDEN + "imagen-como-dato" },
+  { id: "metvis", label: "Métodos visuales", group: "vis", kind: "topic", stage: 2, desc: "Fotografía, dibujo y registro visual como técnicas de investigación.", url: SITE + "/investigacion-con-imagenes/" },
+  { id: "literacidad", label: "Literacidad visual crítica", group: "vis", kind: "topic", stage: 2, desc: "Aprender a leer las imágenes y a desconfiar de ellas." },
+  { id: "arteedu", label: "Arte-educación", group: "vis", kind: "topic", stage: 2, desc: "El arte como forma de enseñar y de aprender.", url: SITE + "/arte-educacion/" },
 
-  { id: "archivo", label: "El archivo como práctica artística", group: "cre", kind: "topic", stage: 2, desc: "El archivo como material, método y obra.", url: SITE + "/creacion/" },
-  { id: "invcre", label: "Investigación-creación", group: "cre", kind: "topic", stage: 2, desc: "La creación como forma de producir conocimiento.", url: SITE + "/investigacion-creacion/" },
-  { id: "formativos", label: "Procesos formativos con estudiantes", group: "cre", kind: "topic", stage: 2, desc: "Procesos de investigación-creación desarrollados con estudiantes.", url: SITE + "/creacion/" },
+  { id: "archivo", label: "El archivo como práctica artística", group: "cre", kind: "topic", stage: 2, desc: "Reunir, ordenar y reactivar documentos e imágenes como obra.", url: SITE + "/creacion/" },
+  { id: "memoria", label: "Memoria", group: "cre", kind: "topic", stage: 2, desc: "Lo que se guarda, lo que se olvida y quién decide." },
+  { id: "obra", label: "La obra como conocimiento", group: "cre", kind: "topic", stage: 2, desc: "La pieza artística como resultado de investigación." },
+  { id: "proceso", label: "Proceso creativo", group: "cre", kind: "topic", stage: 2, desc: "Bocetos, pruebas y errores: el proceso como fuente de datos." },
+  { id: "formativos", label: "Procesos formativos con estudiantes", group: "cre", kind: "topic", stage: 2, desc: "Investigación-creación desarrollada con estudiantes en el aula y el taller.", url: SITE + "/creacion/" },
 
-  { id: "web", label: "Sitio web", group: "plat", kind: "platform", stage: 3, desc: "La página principal: elverchaparroLAB.wordpress.com, que pasará a elverchaparro.com.", url: SITE },
-  { id: "github", label: "GitHub", group: "plat", kind: "platform", stage: 3, desc: "Repositorios y herramientas abiertas publicadas con GitHub Pages.", url: "https://github.com/elvervisual" },
-  { id: "jardin", label: "Jardín digital · Obsidian", group: "plat", kind: "platform", stage: 3, desc: "Notas en proceso escritas en Obsidian y publicadas con Quartz.", url: "https://elvervisual.github.io/elver.chaparro-LAB/" },
-  { id: "scholar", label: "Google Scholar", group: "plat", kind: "platform", stage: 3, desc: "Publicaciones y citas.", url: "https://scholar.google.com/citations?hl=es&user=ZXOKubwAAAAJ" },
-  { id: "cvlac", label: "CvLAC · Minciencias", group: "plat", kind: "platform", stage: 3, desc: "Hoja de vida académica en Minciencias.", url: "https://scienti.minciencias.gov.co/cvlac/visualizador/generarCurriculoCv.do?cod_rh=0000472603" },
-  { id: "linkedin", label: "LinkedIn", group: "plat", kind: "platform", stage: 3, desc: "Perfil profesional (UNAD).", url: "https://www.linkedin.com/in/elver-chaparro-26544a100/" },
-  { id: "instagram", label: "Instagram", group: "plat", kind: "platform", stage: 3, desc: "Registro visual de procesos.", url: "https://www.instagram.com/investigium.lab/" },
-  { id: "x", label: "X", group: "plat", kind: "platform", stage: 3, desc: "Difusión breve.", url: "https://x.com/investigiumlab" },
-
-  { id: "hf", label: "Hugging Face", group: "plat", kind: "platform", stage: 4, expansion: true, desc: "En expansión: modelos, datasets y demos (Spaces) para análisis cualitativo y de imágenes, enlazados con GitHub.", url: "https://huggingface.co/" },
-  { id: "zotero", label: "Zotero", group: "plat", kind: "platform", stage: 4, expansion: true, desc: "En expansión: bibliotecas compartidas conectadas con el jardín digital y la revisión sistemática.", url: "https://www.zotero.org/" },
-  { id: "agentesinv", label: "Agentes de investigación", group: "ia", kind: "topic", stage: 4, expansion: true, desc: "En expansión: agentes que acompañan fases concretas del proceso (búsqueda, codificación, escritura) con supervisión del investigador.", url: "https://investigium.github.io/ruta-investigacion-ia/prompts-y-agentes.html#inicio" },
-  { id: "vision", label: "Visión computacional para estudios visuales", group: "vis", kind: "topic", stage: 4, expansion: true, desc: "En expansión: análisis de corpus de imágenes con modelos abiertos, cruzando estudios visuales e IA.", url: "https://huggingface.co/" }
+  { id: "agentes", label: "Agentes de investigación", group: "ia", kind: "topic", stage: 4, expansion: true, desc: "En expansión: agentes que acompañan fases concretas del proceso con supervisión del investigador." },
+  { id: "vision", label: "Visión computacional", group: "vis", kind: "topic", stage: 4, expansion: true, desc: "En expansión: análisis de grandes corpus de imágenes con modelos abiertos." },
+  { id: "hd", label: "Humanidades digitales", group: "cre", kind: "topic", stage: 4, expansion: true, desc: "En expansión: archivos, imágenes y textos trabajados con herramientas digitales." },
+  { id: "abierta", label: "Ciencia abierta", group: "cual", kind: "topic", stage: 4, expansion: true, desc: "En expansión: datos, métodos y herramientas compartidos para que otros los usen." }
 ];
 
 const LINKS = [
-  ["elver","cual"],["elver","ia"],["elver","vis"],["elver","cre"],["elver","web"],
-  ["cual","metodologias"],["cual","herramientas"],["cual","consultorias"],["cual","matriz"],["cual","zettel"],
-  ["ia","ruta"],["ia","prompts"],["ia","labcual"],["ia","etica"],
-  ["vis","cultura"],["vis","imagenes"],["vis","arteedu"],["vis","imgdato"],
-  ["cre","archivo"],["cre","invcre"],["cre","formativos"],
+  ["pensamiento","investigacion"],["pensamiento","practica"],["pensamiento","ensenanza"],
+  ["investigacion","cual","eje"],["investigacion","ia","eje"],["investigacion","vis","eje"],
+  ["practica","cre","eje"],["practica","vis","eje"],["ensenanza","cual","eje"],["ensenanza","ia","eje"],["ensenanza","cre","eje"],
+  ["cual","matriz"],["cual","codificacion"],["cual","hermeneutica"],["cual","teoriafund"],["cual","etnografia"],["cual","revision"],
+  ["cual","triangulacion"],["cual","reflexividad"],["cual","formacion"],["cual","escritura"],["cual","zettel"],
+  ["ia","prompts"],["ia","analisisia"],["ia","critico"],["ia","sesgos"],["ia","etica"],["ia","trazabilidad"],
+  ["vis","cultura"],["vis","regimenes"],["vis","imgdato"],["vis","metvis"],["vis","literacidad"],["vis","arteedu"],
+  ["cre","archivo"],["cre","memoria"],["cre","obra"],["cre","proceso"],["cre","formativos"],
+  // conceptos que tocan los ejes
+  ["formacion","ensenanza","eje"],["escritura","ensenanza","eje"],["arteedu","ensenanza","eje"],["formativos","ensenanza","eje"],
+  ["proceso","practica","eje"],["obra","practica","eje"],["etnografia","practica","eje"],
   // cruces entre líneas
-  ["ia","cual","cross","Análisis cualitativo asistido por IA"],["labcual","cual","cross"],["herramientas","ia","cross"],
-  ["imgdato","ia","cross","La imagen como dato para modelos de IA"],["archivo","cultura","cross"],["invcre","metodologias","cross"],
-  ["formativos","arteedu","cross"],["imagenes","invcre","cross"],["ruta","matriz","cross"],
-  // plataformas
-  ["github","ruta"],["github","prompts"],["github","labcual"],["github","jardin"],
-  ["jardin","zettel"],["jardin","matriz"],["jardin","imgdato"],["jardin","etica"],
-  ["scholar","vis"],["scholar","cual"],["cvlac","scholar"],["linkedin","elver"],["instagram","cre"],["x","elver"],
-  ["web","cual"],["web","vis"],["web","cre"],
+  ["analisisia","codificacion","cross"],["analisisia","revision","cross"],["analisisia","imgdato","cross"],
+  ["trazabilidad","reflexividad","cross"],["trazabilidad","triangulacion","cross"],["critico","literacidad","cross"],
+  ["sesgos","regimenes","cross"],["etica","reflexividad","cross"],["archivo","cultura","cross"],["memoria","archivo","cross"],
+  ["metvis","etnografia","cross"],["metvis","proceso","cross"],["obra","hermeneutica","cross"],["reflexividad","proceso","cross"],
+  ["zettel","escritura","cross"],["zettel","hermeneutica","cross"],["matriz","formacion","cross"],["formativos","arteedu","cross"],
+  ["cre","cual","cross"],["prompts","escritura","cross"],
   // en expansión
-  ["hf","ia","expansion"],["hf","github","expansion"],["hf","vision","expansion"],["zotero","herramientas","expansion"],["zotero","jardin","expansion"],
-  ["agentesinv","ia","expansion"],["agentesinv","prompts","expansion"],["vision","vis","expansion"],["vision","imgdato","expansion"]
+  ["agentes","prompts"],["agentes","revision"],["vision","imgdato"],["vision","analisisia"],["hd","archivo"],["hd","imgdato"],["hd","zettel"],
+  ["abierta","trazabilidad"],["abierta","revision"]
 ];
 
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
@@ -259,7 +271,7 @@ const links = LINKS.map(([s, t, type, label]) => ({ source: s, target: t, type: 
 const neighbors = new Map(NODES.map(n => [n.id, new Set()]));
 links.forEach(l => { neighbors.get(l.source).add(l.target); neighbors.get(l.target).add(l.source); });
 NODES.forEach(n => n.degree = neighbors.get(n.id).size);
-const radius = d => d.kind === "core" ? 16 : d.kind === "line" ? 12 : 4 + Math.min(d.degree, 6) * 0.9;
+const radius = d => d.kind === "core" ? 17 : d.kind === "pole" ? 14 : d.kind === "line" ? 11 : 4 + Math.min(d.degree, 6) * 0.9;
 
 const state = { groups: new Set(Object.keys(GROUPS)), expansion: true, selected: null, stageMax: 4, query: "" };
 
@@ -274,11 +286,12 @@ svg.call(zoom).on("dblclick.zoom", null);
 const sim = d3.forceSimulation(NODES)
   .force("link", d3.forceLink(links).id(d => d.id).distance(l => {
     const a = l.source.kind, b = l.target.kind;
-    if (a === "core" || b === "core") return 120;
+    if (a === "core" || b === "core") return 110;
+    if (l.type === "eje") return a === "pole" && b === "pole" ? 160 : 140;
     if (l.type === "cross") return 150;
     return a === "line" || b === "line" ? 70 : 95;
-  }).strength(l => l.type === "cross" ? 0.12 : 0.6))
-  .force("charge", d3.forceManyBody().strength(d => d.kind === "core" ? -900 : d.kind === "line" ? -500 : -170))
+  }).strength(l => l.type === "cross" ? 0.1 : l.type === "eje" ? 0.25 : 0.6))
+  .force("charge", d3.forceManyBody().strength(d => d.kind === "core" ? -700 : d.kind === "pole" ? -700 : d.kind === "line" ? -450 : -150))
   .force("collide", d3.forceCollide().radius(d => radius(d) + 8))
   .force("center", d3.forceCenter(0, 0))
   .force("x", d3.forceX(0).strength(0.03)).force("y", d3.forceY(0).strength(0.04));
@@ -288,7 +301,7 @@ let linkSel = linkG.selectAll("line"), nodeSel = nodeG.selectAll("g");
 function visible(d) {
   if (d.stage > state.stageMax) return false;
   if (d.expansion && !state.expansion) return false;
-  if (d.kind === "core") return true;
+  if (d.group === "eje") return true;
   return state.groups.has(d.group);
 }
 
@@ -299,7 +312,7 @@ function render() {
 
   linkSel = linkG.selectAll("line").data(vLinks, l => (l.source.id || l.source) + ">" + (l.target.id || l.target))
     .join(enter => enter.append("line").attr("stroke-opacity", 0).call(e => e.transition().duration(500).attr("stroke-opacity", 1)))
-    .attr("class", l => "link " + (l.type === "cross" ? "cross" : l.type === "expansion" ? "expansion" : ""));
+    .attr("class", l => "link " + (l.type === "cross" ? "cross" : l.type === "expansion" ? "expansion" : l.type === "eje" ? "eje" : ""));
 
   nodeSel = nodeG.selectAll("g.node").data(vNodes, d => d.id)
     .join(enter => {
@@ -334,7 +347,7 @@ function updateLabels() {
   const focus = state.selected || state.hover;
   const near = focus ? neighbors.get(focus.id) : null;
   nodeSel.select("text").style("opacity", d => {
-    if (d.kind !== "topic" && d.kind !== "platform") return 1;
+    if (d.kind !== "topic") return 1;
     if (focus && (d.id === focus.id || near.has(d.id))) return 1;
     if (state.query && matches(d)) return 1;
     return zoomK >= 1.05 ? 1 : zoomK >= 0.8 ? 0.55 : 0;
@@ -363,10 +376,10 @@ function intro() {
   panel.style.setProperty("--accent", css("--c-ia"));
   panel.innerHTML = `
     <span class="eyebrow">Cómo leer el grafo</span>
-    <h2>Cuatro líneas que se cruzan</h2>
-    <p>Cada color es una línea de trabajo. Las líneas punteadas muestran dónde se cruzan: la IA atraviesa el análisis cualitativo y el estudio de las imágenes; la creación dialoga con la cultura visual.</p>
-    <p>Los nodos violeta son plataformas. Los de borde discontinuo están en expansión, como Hugging Face.</p>
-    <p class="hint">Arrastra para mover, usa la rueda o los dedos para acercar y toca un nodo para ver su detalle.</p>`;
+    <h2>Un pensamiento que crece en red</h2>
+    <p>En el centro está la construcción de pensamiento, sostenida por tres ejes: investigación, práctica y enseñanza. De ellos salen cuatro campos, cada uno con su color, y de cada campo sus conceptos.</p>
+    <p>Las líneas punteadas son cruces entre campos: la IA atraviesa la codificación y la imagen como dato; el archivo dialoga con la cultura visual. Los nodos de borde discontinuo son conceptos en expansión.</p>
+    <p class="hint">Arrastra para mover, acerca con la rueda o los dedos y toca un concepto para ver sus relaciones. Prueba “Ver cómo crece”.</p>`;
 }
 function select(d) {
   state.selected = d;
@@ -377,14 +390,14 @@ function select(d) {
   const outcomes = d.outcomes ? `<h3>Resultados de aprendizaje</h3><ol>${d.outcomes.map(o => `<li>${o}</li>`).join("")}</ol>` : "";
   panel.innerHTML = `
     <button class="close" aria-label="Cerrar detalle">×</button>
-    <span class="eyebrow">${GROUPS[d.group].name}${d.kind === "line" ? " · línea de trabajo" : ""}</span>
+    <span class="eyebrow">${GROUPS[d.group].name}${d.kind === "line" ? " · línea de trabajo" : d.kind === "pole" ? " · eje" : ""}</span>
     <h2>${d.label}</h2>
     <span class="status">${d.expansion ? "En expansión" : "Activo"} · ${d.degree} conexiones</span>
     <p>${d.desc}</p>
     ${outcomes}
     <h3>Conecta con</h3>
     <ul>${near.map(n => `<li><button data-id="${n.id}"><span class="dot" style="--dot:${colorOf(n)}"></span>${n.label}</button></li>`).join("")}</ul>
-    ${d.url ? `<a class="go" href="${d.url}" target="_blank" rel="noopener">Abrir ${d.kind === "platform" ? "plataforma" : "página"} ↗</a>` : ""}`;
+    ${d.url ? `<a class="go" href="${d.url}" target="_blank" rel="noopener">Profundizar ↗</a>` : ""}`;
   panel.querySelector(".close").onclick = () => { state.selected = null; highlight(null); intro(); };
   panel.querySelectorAll("li button").forEach(b => b.onclick = () => {
     const n = byId.get(b.dataset.id); select(n);
@@ -396,7 +409,7 @@ svg.on("click", () => { state.selected = null; highlight(null); intro(); });
 
 // filtros por línea
 const filters = document.getElementById("filters");
-["cual","ia","vis","cre","plat"].forEach(g => {
+["cual","ia","vis","cre"].forEach(g => {
   const b = document.createElement("button");
   b.className = "chip"; b.setAttribute("aria-pressed", "true");
   b.innerHTML = `<span class="dot" style="--dot:var(${GROUPS[g].color})"></span>${GROUPS[g].name}`;
@@ -424,7 +437,7 @@ let growing = false;
 document.getElementById("grow").onclick = async () => {
   if (growing) return; growing = true;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  for (let s = 0; s <= 4; s++) {
+  for (const s of [0, 1, 2, 4]) {
     state.stageMax = s; render();
     if (!reduce) await new Promise(r => setTimeout(r, 900));
   }
