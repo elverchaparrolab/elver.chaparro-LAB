@@ -1,4 +1,4 @@
-# Jardín digital · Elver Chaparro Cardozo
+# Jardín digital · Elver Chaparro
 
 Notas en proceso sobre investigación cualitativa, estudios visuales y creación, publicadas desde Obsidian con [Quartz](https://quartz.jzhao.xyz/).
 

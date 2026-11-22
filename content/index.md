@@ -4,7 +4,7 @@ title: Jardín digital
 
 Bienvenido a mi jardín digital. Aquí publico notas en proceso sobre investigación cualitativa, estudios visuales y creación. No son artículos terminados: son ideas que crecen, se conectan entre sí y cambian con el tiempo.
 
-Soy Elver Chaparro Cardozo, investigador y docente. Mi sitio principal está en [elverchaparrocardozo.wordpress.com](https://elverchaparrocardozo.wordpress.com/).
+Soy Elver Chaparro, investigador y docente. Mi sitio principal está en [elverchaparrocardozo.wordpress.com](https://elverchaparrocardozo.wordpress.com/).
 
 ## Por dónde empezar
 
