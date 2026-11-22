@@ -14,7 +14,7 @@ const config: QuartzConfig = {
     enablePopovers: true,
     analytics: null,
     locale: "es-ES",
-    baseUrl: "elvervisual.github.io/elver.chaparro-LAB",
+    baseUrl: "elverchaparrolab.github.io/elver.chaparro-LAB",
     ignorePatterns: ["private", "privado", "borradores", "templates", "plantillas", ".obsidian"],
     defaultDateType: "modified",
     theme: {
