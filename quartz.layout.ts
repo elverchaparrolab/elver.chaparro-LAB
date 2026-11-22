@@ -11,7 +11,7 @@ export const sharedPageComponents: SharedLayout = {
       "Sitio web": "https://investigiumdotcom.wordpress.com/",
       GitHub: "https://github.com/elvervisual",
       "Google Scholar": "https://scholar.google.com/citations?hl=es&user=ZXOKubwAAAAJ",
-      LinkedIn: "https://www.linkedin.com/in/elver-chaparro-ba0a94117/",
+      LinkedIn: "https://www.linkedin.com/in/elver-chaparro-26544a100/",
     },
   }),
 }
