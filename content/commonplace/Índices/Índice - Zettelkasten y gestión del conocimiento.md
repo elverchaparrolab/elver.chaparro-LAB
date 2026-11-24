@@ -22,7 +22,7 @@ El método: cómo funciona un Zettelkasten y cómo gestiono mi conocimiento.
 - [[202505120002 - 0A4 Secuencia de notas de Scott P Shepper Antinet Zettelkasten|0A4 Secuencia de notas de Scott P Shepper Antinet Zettelkasten]]
 - [[202508122001 - Secuencia de notas de Scott P Shepper Antinet Zettelkasten|Secuencia de notas de Scott P Shepper Antinet Zettelkasten]]
 - [[202512232316 - ¿Cómo empezar un Commonplace Book?|¿Cómo empezar un Commonplace Book?]]
-- TU CEREBRO DIGITAL│
+- [[202610171544 - TU CEREBRO DIGITAL│|TU CEREBRO DIGITAL│]]
 - plugins de Obsidian
 - Omniseach
 - Omniseach
