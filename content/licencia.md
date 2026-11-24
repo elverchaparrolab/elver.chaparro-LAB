@@ -12,6 +12,7 @@ Los textos, fotografías y demás contenidos originales de Elver Chaparro Cardoz
 - [Laboratorio de modelos de análisis cualitativo](https://elverchaparrolab.github.io/qualitative-analysis/).
 - [Ruta de investigación con IA](https://investigium.github.io/ruta-investigacion-ia/), incluida su página de prompts y agentes.
 - [Libro de prompts. Procesos de investigación](https://investigium.github.io/libro-prompts-matriz/).
+- [MOOC de análisis fenomenológico](https://elverchaparrolab.github.io/MOOC-analisis-fenomenologico/).
 
 Este aviso se refiere a los contenidos originales de Elver Chaparro Cardozo. Los créditos y las licencias específicas de las aportaciones de otros autores se mantienen.
 
