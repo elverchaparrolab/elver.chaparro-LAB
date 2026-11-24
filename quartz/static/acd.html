@@ -68,6 +68,8 @@ h2 { font-size: clamp(1.4rem, 3vw, 1.9rem); letter-spacing: -0.015em; margin: 0 
 .mod .n { font: 500 0.72rem var(--mono); color: var(--c); }
 .mod .t { font-weight: 600; font-size: 0.95rem; line-height: 1.25; }
 .mod .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
+.mod .nv { font: 500 0.66rem var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.mod .top { display: flex; align-items: center; gap: 8px; }
 .detalle { margin-top: 16px; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--c, var(--accent)); border-radius: 12px; padding: 20px 22px; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 22px; }
 .detalle h3 { margin: 0 0 6px; font-size: 1.2rem; }
 .detalle .autores { font: 0.78rem var(--mono); color: var(--muted); margin: 0 0 10px; }
@@ -121,7 +123,7 @@ footer .wrap { display: flex; gap: 10px 24px; flex-wrap: wrap; justify-content: 
   <div class="wrap">
     <p class="eyebrow">Herramienta abierta · Laboratorio</p>
     <h1>Análisis crítico del discurso</h1>
-    <p class="lead">Analiza discursos e imágenes: quién habla y en nombre de quién, cómo se construye a Nosotros y a Ellos, qué argumentos se usan y qué se da por sentado. Indicadores reproducibles y una IA que propone, mientras tú decides.</p>
+    <p class="lead">Analiza discursos, entrevistas e imágenes en dos niveles. En el microestructural: quién habla y en nombre de quién, con qué metáforas y qué acontecimientos relata. En el macroestructural: de qué trata globalmente el discurso y con qué estrategias nombra, califica y argumenta. Indicadores reproducibles y una IA que propone, mientras tú decides.</p>
     <div class="cta">
       <a class="btn primary" href="#laboratorio">Usar el laboratorio ↓</a>
       <a class="btn ghost" href="#modulos">Conocer los módulos</a>
@@ -132,8 +134,8 @@ footer .wrap { display: flex; gap: 10px 24px; flex-wrap: wrap; justify-content: 
 <main>
   <section id="modulos">
     <div class="wrap">
-      <h2>Siete módulos, un análisis</h2>
-      <p class="sub">Toca cada módulo para ver qué analiza, de qué autores viene y un ejemplo de lo que marca la herramienta.</p>
+      <h2>Del texto a la macroestructura</h2>
+      <p class="sub">Una arquitectura micro y macroestructural de doble vía, apoyada en la codificación. Toca cada módulo para ver qué analiza, de qué autores viene y un ejemplo de lo que marca la herramienta.</p>
       <div class="mods" id="mods" role="group" aria-label="Módulos del laboratorio"></div>
       <div class="detalle" id="detalle" aria-live="polite"></div>
     </div>
@@ -144,10 +146,10 @@ footer .wrap { display: flex; gap: 10px 24px; flex-wrap: wrap; justify-content: 
       <h2>Cómo se trabaja</h2>
       <p class="sub">La herramienta acompaña cada fase; la interpretación es siempre del investigador.</p>
       <div class="flujo">
-        <div class="paso"><h3>Carga el corpus</h3><p>Pega un texto o sube .txt, .pdf, .docx e imágenes. Llena la ficha de contexto.</p></div>
-        <div class="paso"><h3>Lee los indicadores</h3><p>Deixis, modalidad, pasivas, cuadrado ideológico y topoi, resaltados en el texto.</p></div>
-        <div class="paso"><h3>Codifica con IA</h3><p>La IA propone códigos con cita literal o evidencia visual. Tú aceptas, modificas o rechazas.</p></div>
-        <div class="paso"><h3>Exporta y reporta</h3><p>CSV, informe y proyecto JSON con la trazabilidad del uso de IA y el acuerdo alcanzado.</p></div>
+        <div class="paso"><h3>Carga y prepara</h3><p>Pega un texto o sube .txt, .pdf, .docx e imágenes. Si es una entrevista, separa los hablantes y limpia la transcripción Jefferson. Llena la ficha de contexto.</p></div>
+        <div class="paso"><h3>Nivel micro</h3><p>Indicadores, deixis, metáforas y otras figuras, esquemas de acontecimiento y modelos mentales.</p></div>
+        <div class="paso"><h3>Nivel macro</h3><p>Temas, macroproposiciones y topología; estrategias de Wodak, cuadrado ideológico y topoi.</p></div>
+        <div class="paso"><h3>Codifica y reporta</h3><p>La IA propone códigos con cita verificada y tú validas. Exporta un informe Word por niveles, con marca de agua, más CSV y JSON.</p></div>
       </div>
     </div>
   </section>
@@ -170,7 +172,7 @@ footer .wrap { display: flex; gap: 10px 24px; flex-wrap: wrap; justify-content: 
                 src="https://elvervisual-acd-analisis-critico-discurso.hf.space/?__theme=light"
                 allow="clipboard-write; fullscreen"></iframe>
       </div>
-      <p class="aviso">No subas datos personales sin anonimizar ni consentimiento. Para usar la IA, pega tu propio token de Hugging Face en la pestaña de codificación; el resto de módulos funciona sin IA.</p>
+      <p class="aviso">No subas datos personales sin anonimizar ni consentimiento: las entrevistas con participantes conviene analizarlas en una copia local de la herramienta. Para usar la IA, pega tu propio token de Hugging Face en la pestaña de codificación; el resto de módulos funciona sin IA.</p>
     </div>
   </section>
 </main>
@@ -184,41 +186,71 @@ footer .wrap { display: flex; gap: 10px 24px; flex-wrap: wrap; justify-content: 
 
 <script>
 const MODULOS = [
-  { id: "ind", n: "01", t: "Indicadores lingüísticos", c: "--c-text", autores: "Fairclough · Halliday (transitividad)",
+  { id: "ent", n: "01", nv: "Corpus", t: "Modo entrevista", c: "--c-ctx", autores: "Jefferson (transcripción) · análisis conversacional",
+    texto: "Para entrevistas y grupos de discusión: reconoce los turnos y los hablantes, deja analizar solo a los participantes y limpia los signos de Jefferson para que no se cuenten como palabras. Cada turno pasa a ser un segmento.",
+    puntos: ["La voz del entrevistador no se mezcla con la de los participantes", "Los signos no se pierden: pausas largas, volumen alto, voz baja, alargamientos y conducta no verbal quedan en una tabla de prosodia"],
+    ejemplo: '[P3] Participante: E:::h bueno<mark>(1.4)</mark> eso pasó en el barrio(.) y ¡<mark>NADIE</mark> dijo nada! <mark>((silencio))</mark>',
+    nota: "Texto limpio para el análisis; la pausa larga, el volumen alto y la conducta no verbal quedan como datos.", tab: "Pestaña 1 · Modo entrevista" },
+  { id: "ctx", n: "02", nv: "Corpus", t: "Modelos de contexto", c: "--c-ctx", autores: "van Dijk (enfoque sociocognitivo)",
+    texto: "Una ficha por documento registra el modelo de contexto: género, medio, fecha, lugar, hablante y su rol, audiencia, propósito y conocimiento que se supone compartido.",
+    puntos: ["Se integra en la síntesis del modelo mental y en el informe Word", "Base para las dimensiones interpretativa y explicativa"],
+    ejemplo: '«Devolver <mark>la</mark> seguridad a las familias» presupone que <mark>hubo seguridad</mark> y que <mark>alguien la quitó</mark>.',
+    nota: "Presuposición: lo que el lector debe creer para aceptar el enunciado.", tab: "Pestaña 1 · Ficha de contexto" },
+  { id: "ind", n: "03", nv: "Micro", t: "Indicadores lingüísticos", c: "--c-text", autores: "Fairclough · Halliday (transitividad)",
     texto: "Mide de forma reproducible la modalidad (obligación, certeza), las pasivas que ocultan o muestran al agente, las nominalizaciones, el léxico de conflicto y de legitimación, y las voces citadas.",
     puntos: ["Sin IA: el mismo texto da siempre el mismo resultado", "Comparación entre documentos por cada 1000 palabras"],
     ejemplo: 'La reforma <mark>fue aprobada</mark> ayer. <mark>Se tomarán</mark> medidas para la <mark>recuperación</mark> del orden.',
-    nota: "Pasiva sin agente · impersonal con «se» · nominalización: tres formas de borrar quién actúa.", tab: "Pestaña 2 · Indicadores" },
-  { id: "dx", n: "02", t: "Deixis y enunciación", c: "--c-ctx", autores: "Benveniste · Kerbrat-Orecchioni",
+    nota: "Pasiva sin agente · impersonal con «se» · nominalización: tres formas de borrar quién actúa.", tab: "Pestaña 2 · Nivel microestructural" },
+  { id: "dx", n: "04", nv: "Micro", t: "Deixis y enunciación", c: "--c-text", autores: "Benveniste · Kerbrat-Orecchioni",
     texto: "Muestra cómo el hablante se inscribe en el discurso: a quién incluye en el nosotros, desde qué lugar y tiempo habla, con qué distancia trata a los demás y dónde borra su responsabilidad.",
     puntos: ["Persona (también el nosotros del verbo), espacio, tiempo y tratamiento", "Subjetivemas y borrado del enunciador («hay que», «es sabido»)"],
     ejemplo: '<mark>Aquí</mark>, en <mark>este país</mark>, <mark>hoy</mark> <mark>decimos</mark> basta; <mark>ustedes</mark> <mark>allá</mark> no entienden.',
-    nota: "Seis marcas: la frontera entre el lugar propio y el ajeno se construye con deícticos.", tab: "Pestaña 3 · Deixis y enunciación" },
-  { id: "cua", n: "03", t: "Cuadrado ideológico", c: "--c-cre", autores: "van Dijk",
+    nota: "La frontera entre el lugar propio y el ajeno se construye con deícticos.", tab: "Pestaña 2 · Nivel microestructural" },
+  { id: "ret", n: "05", nv: "Micro", t: "Estructuras retóricas y metáforas", c: "--c-text", autores: "Lakoff y Johnson · Pragglejaz (MIP)",
+    texto: "Detecta metáforas orientacionales (arriba/abajo, adelante/atrás), ontológicas (lo abstracto como entidad, recipiente o persona) y estructurales (un concepto pensado en términos de otro), además de símiles, hipérboles, metonimias, eufemismos, repeticiones y preguntas retóricas.",
+    puntos: ["Cada expresión es candidata: se valida comparando su sentido básico con el sentido en contexto", "Resumen por clase de metáfora y detalle con contexto"],
+    ejemplo: 'Hay que <mark>salir adelante</mark>; <mark>cargamos con el dolor</mark> de un país <mark>herido</mark>.',
+    nota: "Orientacional · ontológica · estructural (LA SOCIEDAD ES UN CUERPO).", tab: "Pestaña 2 · Nivel microestructural" },
+  { id: "esq", n: "06", nv: "Micro", t: "Esquemas de acontecimiento y modelos mentales", c: "--c-text", autores: "van Dijk (memoria episódica, modelos de situación)",
+    texto: "Por segmento propone escenario, participantes, acciones, causas, consecuencias y evaluación; marca los relatos de experiencia propia (memoria episódica) y lo que se da por sabido. Sintetiza el modelo de situación junto con el modelo de contexto.",
+    puntos: ["Distingue secuencias narrativas, evaluativas y expositivas", "Señala el acontecimiento central candidato"],
+    ejemplo: '<mark>Aquella tarde</mark>, en <mark>el barrio</mark>, <mark>la policía llegó</mark> y <mark>los vecinos</mark> se encerraron. <mark>Nunca olvido</mark> ese silencio.',
+    nota: "Escenario · participantes · acción · memoria episódica: el esqueleto del modelo mental.", tab: "Pestaña 2 · Nivel microestructural" },
+  { id: "mac", n: "07", nv: "Macro", t: "Macroproposiciones y topología", c: "--c-cre", autores: "van Dijk (macroestructuras y macrorreglas)",
+    texto: "Agrupa los términos en temas globales y sugiere qué macrorregla aplicar en cada segmento: supresión, generalización o construcción. La topología muestra dónde aparece cada tema, con cuáles coocurre y cómo progresa.",
+    puntos: ["La macroproposición la escribe el investigador en la tabla, con su evidencia", "Detecta temas que aparecen solo al final: conclusiones o giros"],
+    ejemplo: '<b>M1</b> «La memoria se transmite en la obra» ← S2, S3, S5 · <b>T1</b> ■■·■· · <b>T2</b> ····■',
+    nota: "El mapa de temas por segmento hace visible la progresión del discurso.", tab: "Pestaña 3 · Nivel macroestructural" },
+  { id: "est", n: "08", nv: "Macro", t: "Estrategias discursivas", c: "--c-cre", autores: "Wodak · Reisigl y Wodak",
+    texto: "Responde las cinco preguntas del enfoque histórico-discursivo: cómo se nombra a personas y grupos, qué atributos se les adjudican, con qué argumentos se justifica la inclusión o la exclusión, desde qué perspectiva se habla y si se intensifica o se mitiga.",
+    puntos: ["Énfasis en las cuestiones raciales, nacionales y étnicas", "Tablas de nominación por tipo de categoría y de predicación"],
+    ejemplo: 'Nominación: <mark>los venezolanos</mark> · Predicación: <mark>son un problema</mark> · Perspectiva: <mark>según el ministro</mark>',
+    nota: "Tres de las cinco estrategias en una sola frase.", tab: "Pestaña 3 · Nivel macroestructural" },
+  { id: "cua", n: "09", nv: "Macro", t: "Cuadrado ideológico", c: "--c-cre", autores: "van Dijk",
     texto: "Arma una matriz 2×2 con citas: cómo se enfatiza lo bueno propio y lo malo ajeno, y se mitiga lo malo propio y lo bueno ajeno. Tú defines con qué palabras se nombra a cada grupo.",
     puntos: ["Valoración y operación (énfasis o mitigación) por oración", "Movimientos de descargo: negación, concesión, empatía aparentes"],
     ejemplo: '<mark>No tenemos nada contra los migrantes, pero</mark> cada migrante le sale caro al contribuyente.',
-    nota: "Negación aparente: presentación negativa del otro protegida por un descargo.", tab: "Pestaña 4 · Cuadrado ideológico" },
-  { id: "top", n: "04", t: "Topoi y argumentación", c: "--c-vis", autores: "Reisigl y Wodak",
+    nota: "Negación aparente: presentación negativa del otro protegida por un descargo.", tab: "Pestaña 3 · Nivel macroestructural" },
+  { id: "top", n: "10", nv: "Macro", t: "Topoi y argumentación", c: "--c-cre", autores: "Reisigl y Wodak",
     texto: "Un topos es la regla que conecta un argumento con su conclusión. La herramienta busca primero la estructura argumentativa y solo ahí propone el topos, con su regla «si…, entonces…».",
     puntos: ["Catálogo de 15 topoi: peligro, carga, utilidad, justicia, historia…", "Las palabras sueltas se muestran como pistas, no como topoi"],
     ejemplo: '<mark>Si no</mark> cerramos la frontera ahora, mañana será <mark>demasiado tarde</mark> para nuestros hijos.',
-    nota: "Topos del peligro: si algo representa un peligro, hay que actuar contra ello.", tab: "Pestaña 5 · Topoi y argumentación" },
-  { id: "ctx", n: "05", t: "Modelos de contexto", c: "--c-ctx", autores: "van Dijk (enfoque sociocognitivo)",
-    texto: "Una ficha por documento registra el modelo de contexto: género, medio, fecha, lugar, hablante y su rol, audiencia, propósito y conocimiento que se supone compartido.",
-    puntos: ["Presuposiciones y modelos de evento como tarea de la IA", "Base para las dimensiones interpretativa y explicativa"],
-    ejemplo: '«Devolver <mark>la</mark> seguridad a las familias» presupone que <mark>hubo seguridad</mark> y que <mark>alguien la quitó</mark>.',
-    nota: "Presuposición: lo que el lector debe creer para aceptar el enunciado.", tab: "Pestaña 1 · Ficha de contexto" },
-  { id: "ia", n: "06", t: "Codificación con IA", c: "--c-ia", autores: "IA con criterio",
+    nota: "Topos del peligro: si algo representa un peligro, hay que actuar contra ello.", tab: "Pestaña 3 · Nivel macroestructural" },
+  { id: "ia", n: "11", nv: "Codificación", t: "Codificación con IA", c: "--c-ia", autores: "IA con criterio",
     texto: "Modelos abiertos proponen códigos con cita literal verificada y categoría validada contra el libro de códigos. Tú aceptas, modificas o rechazas; la app calcula el acuerdo IA–investigador.",
-    puntos: ["Cuatro tareas: general, cuadrado, topoi, presuposiciones y modelos", "Trazabilidad: modelo, temperatura, fecha y prompt en el informe"],
+    puntos: ["Ocho tareas: general, cuadrado, topoi, presuposiciones, metáforas, esquemas y modelos mentales, macroproposiciones y estrategias de Wodak", "Trazabilidad: modelo, temperatura, fecha y prompt en el informe"],
     ejemplo: 'Cita: «<mark>esa gente no representa al pueblo</mark>» → <b>Presentación negativa del otro</b> · cita verificada · pendiente de validar',
-    nota: "La IA es un segundo codificador, no el analista.", tab: "Pestaña 6 · Codificación con IA" },
-  { id: "vis", n: "07", t: "Imágenes (multimodal)", c: "--c-vis", autores: "Kress y van Leeuwen · Machin y Mayr",
+    nota: "La IA es un segundo codificador, no el analista.", tab: "Pestaña 4 · Codificación con IA" },
+  { id: "vis", n: "12", nv: "Imagen", t: "Imágenes (multimodal)", c: "--c-vis", autores: "Kress y van Leeuwen · Machin y Mayr",
     texto: "Analiza fotos, carteles y portadas en nueve dimensiones: representación, actores sociales, mirada, plano, ángulo, modalidad, composición, relación imagen–texto y connotación.",
     puntos: ["Codificación manual guiada o con IA de visión", "Cada código lleva una evidencia visual: qué se ve y dónde"],
     ejemplo: 'Mirada: <mark>demanda</mark> (mira a cámara) · Plano: <mark>cerrado</mark> (íntimo) · Ángulo: <mark>contrapicado</mark> (el representado tiene poder)',
-    nota: "La imagen también argumenta: interpela, acerca o distancia al espectador.", tab: "Pestaña 7 · Imágenes" },
+    nota: "La imagen también argumenta: interpela, acerca o distancia al espectador.", tab: "Pestaña 5 · Imágenes" },
+  { id: "doc", n: "13", nv: "Informe", t: "Informe en Word", c: "--c-ia", autores: "Exportación con trazabilidad",
+    texto: "Genera un documento .docx organizado por niveles: contexto, arquitectura metodológica, nivel micro, nivel macro, codificación y validación, prosodia, memo, trazabilidad de la IA, referencias y anexo con el texto segmentado.",
+    puntos: ["Marca de agua configurable en todas las páginas", "Incluye las macroproposiciones que escribió el investigador"],
+    ejemplo: '<b>3.</b> Nivel microestructural · <b>3.3</b> Metáforas · <b>4.</b> Nivel macroestructural · <b>4.2</b> Topología del discurso',
+    nota: "Listo para anexar a un informe de investigación o a una tesis.", tab: "Pestaña 8 · Exportar" },
 ];
 
 const cont = document.getElementById("mods");
@@ -229,7 +261,7 @@ function mostrar(m) {
   det.innerHTML = `
     <div>
       <h3>${m.t}</h3>
-      <p class="autores">${m.autores}</p>
+      <p class="autores">${m.nv} · ${m.autores}</p>
       <p>${m.texto}</p>
       <ul>${m.puntos.map(p => `<li>${p}</li>`).join("")}</ul>
       <a class="ir" href="#laboratorio">Probarlo en el laboratorio · ${m.tab} →</a>
@@ -244,7 +276,7 @@ MODULOS.forEach(m => {
   const b = document.createElement("button");
   b.className = "mod"; b.type = "button"; b.dataset.id = m.id;
   b.style.setProperty("--c", `var(${m.c})`);
-  b.innerHTML = `<span class="dot"></span><span class="n">${m.n}</span><span class="t">${m.t}</span>`;
+  b.innerHTML = `<span class="top"><span class="dot"></span><span class="n">${m.n}</span><span class="nv">${m.nv}</span></span><span class="t">${m.t}</span>`;
   b.addEventListener("click", () => mostrar(m));
   cont.appendChild(b);
 });
