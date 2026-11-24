@@ -17,6 +17,15 @@ export default ((opts?: Options) => {
           {i18n(cfg.locale).components.footer.createdWith}{" "}
           <a href="https://quartz.jzhao.xyz/">Quartz v{version}</a> © {year}
         </p>
+        <p>
+          © {year} Elver Chaparro Cardozo. Los contenidos originales de este jardín se
+          comparten bajo la licencia{" "}
+          <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" rel="license">
+            Creative Commons Atribución–NoComercial–CompartirIgual 4.0 (CC BY-NC-SA 4.0)
+          </a>.
+          {" "}Las citas, imágenes y materiales de terceros conservan sus derechos y
+          licencias originales. El software Quartz conserva su licencia MIT.
+        </p>
         <ul>
           {Object.entries(links).map(([text, link]) => (
             <li>

@@ -9,6 +9,12 @@ Niklas Luhmann, el sociólogo alemán, construyó un fichero de notas que con lo
 
 Esa idea guía este jardín. Uso Obsidian como segundo cerebro digital y conecto en él los procesos manuales del Zettelkasten con un sistema digital. Aun así, sigo creyendo en el bolígrafo y el papel.
 
+## Mi Zettelkasten físico
+
+![Mi Zettelkasten físico: dos cajas de notas principales y una caja bibliográfica con índice](../adjuntos/zettelkasten-elver-chaparro.jpg)
+
+*Mi Zettelkasten: dos cajas de notas principales y una caja bibliográfica con índice. Foto: Elver Chaparro Cardozo.*
+
 ## Principios
 
 - Una nota, una idea, escrita con mis propias palabras.
