@@ -2,14 +2,14 @@
 title: El jardín digital de Elver Chaparro
 ---
 
-<figure>
-  <img src="adjuntos/elver-chaparro-cardozo.jpg" alt="Retrato de Elver Chaparro Cardozo" width="240" height="240" style="width: 240px; max-width: 100%; height: auto; border-radius: 12px;" />
-  <figcaption>Elver Chaparro Cardozo.</figcaption>
-</figure>
+
 
 Bienvenido a mi jardín digital. Aquí publico notas en proceso sobre investigación cualitativa, estudios visuales y creación. No son artículos terminados: son ideas que crecen, se conectan entre sí y cambian con el tiempo.
 
 Soy Elver Chaparro, investigador y docente. Mi sitio principal está en [elverchaparroLAB.wordpress.com](https://elverchaparrolab.wordpress.com/).
+
+> [!note] Un jardín en proceso
+> Este espacio reúne notas que se revisan, crecen y se conectan. Puedes empezar por [[ahora|lo que estoy trabajando ahora]] o por [[acerca|cómo leer este jardín]].
 
 ## Por dónde empezar
 
