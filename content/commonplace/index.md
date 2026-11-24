@@ -33,6 +33,7 @@ Notas de lectura, ideas y materiales de curso que vienen de mi Commonplace Book 
 - [[202508121958 - Gestión del conocimiento personal|Gestión del conocimiento personal]]
 - [[202508182147 - know-how|know-how]]
 - [[202508122001 - Secuencia de notas de Scott P Shepper Antinet Zettelkasten|Secuencia de notas de Scott P Shepper Antinet Zettelkasten]]
+- [[202610171544 - TU CEREBRO DIGITAL│|TU CEREBRO DIGITAL│]]
 - [[202512232316 - ¿Cómo empezar un Commonplace Book?|¿Cómo empezar un Commonplace Book?]]
 - [[Índice - Zettelkasten y gestión del conocimiento|Índice - Zettelkasten y gestión del conocimiento]]
 
@@ -69,4 +70,4 @@ Notas de lectura, ideas y materiales de curso que vienen de mi Commonplace Book 
 
 - [[Inicio - cómo funciona esta bóveda|Inicio - cómo funciona esta bóveda]]
 
-*Última actualización: 2026-11-22.*
+*Última actualización: 2026-11-24.*
