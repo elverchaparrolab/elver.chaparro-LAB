@@ -25,6 +25,9 @@ export default ((opts?: Options) => {
           </a>.
           {" "}Las citas, imágenes y materiales de terceros conservan sus derechos y
           licencias originales. El software Quartz conserva su licencia MIT.
+          {" "}<a href="https://elverchaparrolab.github.io/elver.chaparro-LAB/licencia">
+            Licencia de los contenidos
+          </a>.
         </p>
         <ul>
           {Object.entries(links).map(([text, link]) => (
