@@ -101,6 +101,7 @@ mark { background: color-mix(in srgb, var(--c, var(--accent)) 22%, transparent);
 .marco iframe { position: relative; z-index: 1; display: block; width: 100%; height: 1150px; border: 0; }
 .cargando { position: absolute; z-index: 0; inset: 0 0 auto 0; height: 120px; display: grid; place-items: center; color: var(--muted); font-size: 0.9rem; pointer-events: none; }
 .aviso { font-size: 0.82rem; color: var(--muted); margin-top: 10px; }
+.refs p { padding-left: 2em; text-indent: -2em; margin: 0 0 10px; font-size: .95rem; max-width: 90ch; }
 footer { padding-block: 28px; color: var(--muted); font-size: 0.85rem; }
 footer .wrap { display: flex; gap: 10px 24px; flex-wrap: wrap; justify-content: space-between; }
 @media (prefers-reduced-motion: reduce) { .mod { transition: none; } .mod:hover { transform: none; } }
@@ -178,12 +179,31 @@ footer .wrap { display: flex; gap: 10px 24px; flex-wrap: wrap; justify-content: 
       <p class="aviso">No subas datos personales sin anonimizar ni consentimiento: las entrevistas con participantes conviene analizarlas en una copia local de la herramienta. Para usar la IA, pega tu propio token de Hugging Face en la pestaña de codificación; el resto de módulos funciona sin IA.</p>
     </div>
   </section>
+  <section id="fuentes">
+    <div class="wrap">
+      <h2>Fuentes</h2>
+      <p class="sub">Obras en las que se basa cada módulo del laboratorio.</p>
+      <div class="refs">
+        <p>Benveniste, É. (1971). <i>Problemas de lingüística general I</i> (J. Almela, Trad.). Siglo XXI. (Obra original publicada en 1966)</p>
+        <p>Fairclough, N. (2010). <i>Critical discourse analysis: The critical study of language</i> (2.ª ed.). Longman.</p>
+        <p>Halliday, M. A. K., y Matthiessen, C. M. I. M. (2014). <i>Halliday's introduction to functional grammar</i> (4.ª ed.). Routledge.</p>
+        <p>Jefferson, G. (2004). Glossary of transcript symbols with an introduction. En G. H. Lerner (Ed.), <i>Conversation analysis: Studies from the first generation</i> (pp. 13–31). John Benjamins. <a href="https://doi.org/10.1075/pbns.125.02jef">https://doi.org/10.1075/pbns.125.02jef</a></p>
+        <p>Kerbrat-Orecchioni, C. (1986). <i>La enunciación: De la subjetividad en el lenguaje</i>. Hachette. (Obra original publicada en 1980)</p>
+        <p>Kress, G., y van Leeuwen, T. (2021). <i>Reading images: The grammar of visual design</i> (3.ª ed.). Routledge.</p>
+        <p>Lakoff, G., y Johnson, M. (1980). <i>Metaphors we live by</i>. University of Chicago Press.</p>
+        <p>Machin, D., y Mayr, A. (2012). <i>How to do critical discourse analysis: A multimodal introduction</i>. SAGE.</p>
+        <p>Pragglejaz Group. (2007). MIP: A method for identifying metaphorically used words in discourse. <i>Metaphor and Symbol, 22</i>(1), 1–39. <a href="https://doi.org/10.1080/10926480709336752">https://doi.org/10.1080/10926480709336752</a></p>
+        <p>Reisigl, M., y Wodak, R. (2016). The discourse-historical approach (DHA). En R. Wodak y M. Meyer (Eds.), <i>Methods of critical discourse studies</i> (3.ª ed., pp. 23–61). SAGE.</p>
+        <p>van Dijk, T. A. (2009). <i>Society and discourse: How social contexts influence text and talk</i>. Cambridge University Press.</p>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer>
   <div class="wrap">
     <span>Análisis Crítico del Discurso v2.2 · Aplicación desarrollada por Elver Chaparro Cardozo · © 2026 Elver Chaparro Cardozo. Todos los derechos reservados.</span>
-    <span><a href="https://elverchaparrolab.github.io/elver.chaparro-LAB/notas/acd-asistido-por-ia">Nota metodológica y cómo citar</a> · <a href="ecosistema.html">Ecosistema conceptual</a></span>
+    <span><a href="https://elverchaparrolab.github.io/elver.chaparro-LAB/notas/acd-asistido-por-ia">Nota metodológica y cómo citar</a> · <a href="ecosistema.html">Ecosistema conceptual</a> · <a href="#fuentes">Fuentes</a></span>
   </div>
 </footer>
 
