@@ -43,6 +43,11 @@ a { color: var(--accent); }
 .sitebar nav { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.82rem; }
 .sitebar nav a { opacity: 0.85; }
 .sitebar nav a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 3px; }
+.utiles { display: flex; align-items: center; gap: 8px; }
+.idioma { display: flex; align-items: center; border: 1px solid rgba(255,255,255,0.3); border-radius: 999px; padding: 3px; }
+.idioma a { font: 700 0.72rem var(--font); letter-spacing: .06em; padding: 4px 8px; border-radius: 999px; opacity: .85; }
+.idioma a[aria-current] { background: var(--accent-soft); color: #15161c !important; opacity: 1; }
+.tema { border: 1px solid rgba(255,255,255,0.3); background: none; color: var(--band-fg); border-radius: 999px; width: 32px; height: 32px; display: grid; place-items: center; cursor: pointer; }
 .back { border: 1px solid var(--accent-soft); color: #fff !important; background: rgba(111,168,255,0.22); border-radius: 999px; padding: 6px 14px; font-weight: 500; font-size: 0.82rem; }
 @media (max-width: 720px) { .sitebar nav { display: none; } }
 
@@ -118,6 +123,7 @@ footer .wrap { display: flex; gap: 10px 24px; flex-wrap: wrap; justify-content: 
       <a href="https://elverchaparrolab.wordpress.com/metodologias/" target="_top">Metodologías</a>
       <a href="ecosistema.html">Ecosistema</a>
     </nav>
+    <div class="utiles"><div class="idioma notranslate" translate="no" role="group" aria-label="Idioma"><a data-lang="es" href="https://elverchaparrolab.github.io/elver.chaparro-LAB/static/acd.html" aria-current="true" title="Español">ES</a><a data-lang="en" href="https://elverchaparrolab-github-io.translate.goog/elver.chaparro-LAB/static/acd.html?_x_tr_sl=es&amp;_x_tr_tl=en&amp;_x_tr_hl=es" title="English (traducción automática)">EN</a><a data-lang="pt" href="https://elverchaparrolab-github-io.translate.goog/elver.chaparro-LAB/static/acd.html?_x_tr_sl=es&amp;_x_tr_tl=pt&amp;_x_tr_hl=es" title="Português (tradução automática)">PT</a></div><button class="tema" type="button" id="tema" aria-label="Cambiar entre modo claro y oscuro"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button></div>
     <a class="back" href="https://elverchaparrolab.wordpress.com/metodologias/analisis-critico-del-discurso/" target="_top">← Volver a ACD en el sitio</a>
   </div>
 </div>
@@ -305,7 +311,10 @@ MODULOS.forEach(m => {
 });
 mostrar(MODULOS[0]);
 
+(function(){var O="https://elverchaparrolab.github.io",T="https://elverchaparrolab-github-io.translate.goog",p=location.pathname,cur="es";try{var tl=new URLSearchParams(location.search).get("_x_tr_tl");if(location.hostname.slice(-14)==="translate.goog"&&tl)cur=tl.slice(0,2)}catch(e){}var D={es:O+p,en:T+p+"?_x_tr_sl=es&_x_tr_tl=en&_x_tr_hl=es",pt:T+p+"?_x_tr_sl=es&_x_tr_tl=pt&_x_tr_hl=es"};document.querySelectorAll(".idioma a[data-lang]").forEach(function(a){var l=a.getAttribute("data-lang");a.href=D[l];if(l===cur)a.setAttribute("aria-current","true");else a.removeAttribute("aria-current");a.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();if(l===cur)return;try{window.top.location.href=D[l]}catch(_){location.href=D[l]}},true)})})();
+(function(){var r=document.documentElement,K="acd-tema",t=null;try{t=localStorage.getItem(K)}catch(e){}if(t)r.setAttribute("data-theme",t);var b=document.getElementById("tema");if(b)b.addEventListener("click",function(){var cur=r.getAttribute("data-theme"),osc=cur?cur==="dark":matchMedia("(prefers-color-scheme: dark)").matches;r.setAttribute("data-theme",osc?"light":"dark");try{localStorage.setItem(K,r.getAttribute("data-theme"))}catch(e){}})})();
 const iframe = document.getElementById("app");
+(function(){const r=document.documentElement;const sync=()=>{const osc=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme: dark)").matches;const u=new URL(iframe.src);u.searchParams.set("__theme",osc?"dark":"light");if(iframe.src!==u.toString())iframe.src=u.toString()};sync();new MutationObserver(sync).observe(r,{attributes:true,attributeFilter:["data-theme"]})})();
 const ocultar = () => { document.getElementById("cargando").hidden = true; };
 iframe.addEventListener("load", ocultar);
 setTimeout(ocultar, 20000);
