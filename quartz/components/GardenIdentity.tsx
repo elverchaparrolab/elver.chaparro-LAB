@@ -5,6 +5,7 @@ const GardenIdentity: QuartzComponent = ({ fileData, cfg, displayClass }: Quartz
   const root = pathToRoot(fileData.slug!)
   return (
     <section class={`garden-identity ${displayClass ?? ""}`}>
+      <a href="https://elverchaparrolab.wordpress.com/" class="garden-back">← Sitio principal</a>
       <a href={root} class="garden-portrait-link" aria-label="Inicio del jardín de Elver Chaparro">
         <img class="garden-portrait" src={`${root}/adjuntos/elver-chaparro-cardozo.jpg`} alt="Elver Chaparro Cardozo" width="144" height="144" />
       </a>
@@ -15,7 +16,6 @@ const GardenIdentity: QuartzComponent = ({ fileData, cfg, displayClass }: Quartz
         <a href={`${root}/ahora`}>Ahora</a>
         <a href={`${root}/acerca`}>Acerca del jardín</a>
         <a href={`${root}/licencia`}>Licencia</a>
-        <a href="https://elverchaparrolab.wordpress.com/">Sitio principal</a>
       </nav>
     </section>
   )

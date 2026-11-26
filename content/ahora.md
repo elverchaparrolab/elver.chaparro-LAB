@@ -27,5 +27,5 @@ El [[commonplace/index|Commonplace Book]] reúne mis notas de lectura y material
 ## Herramientas abiertas
 
 - [Laboratorio de modelos de análisis cualitativo](https://elverchaparrolab.github.io/qualitative-analysis/).
-- [MOOC de análisis fenomenológico](https://elverchaparrolab.github.io/MOOC-analisis-fenomenologico/).
+- [Laboratorio de análisis fenomenológico](https://elverchaparrolab.github.io/MOOC-analisis-fenomenologico/).
 - [Contenidos y herramientas en mi sitio principal](https://elverchaparrolab.wordpress.com/contenido/).

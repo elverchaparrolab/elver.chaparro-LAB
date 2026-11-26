@@ -22,3 +22,7 @@ footer p { line-height: 1.55; }
   .garden-navigation { justify-content: flex-start; }
   h1.article-title { font-size: 2.2rem; }
 }
+
+/* Regreso visible al sitio principal (mismo gesto que en los laboratorios) */
+.garden-back { display: inline-block; margin: 0 0 1rem; padding: 0.35rem 0.9rem; border: 1px solid var(--secondary); border-radius: 999px; font-size: 0.9rem; font-weight: 600; color: var(--secondary); text-decoration: none; background: var(--highlight); }
+.garden-back:hover { background: var(--secondary); color: var(--light); }
