@@ -68,6 +68,8 @@ Notas de lectura, ideas y materiales de curso que vienen de mi Commonplace Book 
 
 ## Otras notas
 
+- [[202611271547 - Deuda cognitiva|Deuda cognitiva]]
+
 - [[Inicio - cómo funciona esta bóveda|Inicio - cómo funciona esta bóveda]]
 
-*Última actualización: 2026-11-24.*
+*Última actualización: 2026-11-27.*
