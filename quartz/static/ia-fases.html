@@ -18,6 +18,15 @@
 html, body { background: var(--bg); color: var(--fg); font-family: Inter, system-ui, -apple-system, sans-serif; }
 a { color: inherit; }
 .wrap { max-width: 1180px; margin: 0 auto; padding: 44px 16px 56px; }
+.topnav {display:flex;flex-wrap:wrap;gap:12px 24px;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--line);font-size:15px;}
+.topnav a {text-underline-offset:4px;}
+.support {margin-top:20px;padding:16px;border:1px solid var(--line);border-radius:4px;}
+.support h3 {font-size:17px;color:#c4b5fd;margin-bottom:6px;}
+.support p,.support a {font-size:15px;line-height:1.55;}
+.legend {margin-top:18px;max-width:850px;color:#c6c8d4;line-height:1.55;font-size:15px;}
+.ias li {min-width:0;}
+.ias li>span:first-child {display:flex;flex-wrap:wrap;gap:5px;}
+@media(max-width:520px){.ias li{grid-template-columns:1fr}.chip{white-space:normal}}
 .eyebrow { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
 h1 { font-size: clamp(30px, 4.4vw, 48px); font-weight: 700; letter-spacing: -.02em; margin: 8px 0 12px; line-height: 1.08; }
 .lead { color: #c6c8d4; max-width: 760px; line-height: 1.55; font-size: 16.5px; }
@@ -65,7 +74,7 @@ h1 { font-size: clamp(30px, 4.4vw, 48px); font-weight: 700; letter-spacing: -.02
 .panel .retoma { font-size: 13.5px; color: var(--muted); }
 .lbl { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: var(--muted); margin-top: 18px; }
 .lbl.c { color: var(--c); }
-.panel p, .panel li { font-size: 15px; line-height: 1.5; color: #d6d8e2; }
+.panel p, .panel li { font-size: 16px; line-height: 1.5; color: #d6d8e2; }
 .panel p { margin-top: 4px; }
 .ias { list-style: none; margin-top: 6px; display: grid; gap: 8px; }
 .ias li { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; }
@@ -81,14 +90,19 @@ h1 { font-size: clamp(30px, 4.4vw, 48px); font-weight: 700; letter-spacing: -.02
 .fade { animation: aparecer .35s ease; }
 @keyframes aparecer { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .flow, .retorno.on, .fade { animation: none; } .orbita { animation: none !important; } }
+.ias li {grid-template-columns:1fr;gap:5px;}
+.ias li>span:first-child {display:flex;flex-wrap:wrap;gap:5px;min-width:0;}
+.chip {white-space:normal;}
 </style>
 </head>
 <body>
 <div class="wrap">
+  <nav class="topnav" aria-label="Volver al laboratorio"><a href="https://elverchaparrolab.wordpress.com/ia-en-la-investigacion/" target="_top">Volver a IA en la investigación</a><a href="https://elverchaparrolab.wordpress.com/" target="_top">Inicio de Elver Chaparro LAB</a></nav>
   <div class="eyebrow">Mapa del proyecto</div>
   <h1>La IA en cada fase de la investigación</h1>
-  <p class="lead">El proyecto es un organismo que crece: cada fase lo alimenta con un producto que la siguiente retoma, y a veces obliga a volver atrás. Pase el cursor (o toque) una fase para ver qué produce, qué IA la acompaña, qué decide usted y qué dejar registrado.</p>
+  <p class="lead">El proyecto es un organismo que crece: cada fase lo alimenta con un producto que la siguiente retoma, y a veces obliga a volver atrás. Pase el cursor (o toque) una fase para ver qué produce, qué herramientas pueden acompañarla, qué decide usted y qué dejar registrado.</p>
 
+  <p class="legend"><strong>Cómo leer el mapa:</strong> los satélites representan una selección de herramientas con funciones de IA, no métodos de investigación. Los métodos y sus laboratorios aparecen en los recursos metodológicos. <strong>Obsidian acompaña las seis fases</strong> como espacio de notas y conexiones; su uso básico no es IA ni requiere activarla.</p>
   <div class="stage">
     <div>
       <div class="map" id="mapa">
@@ -113,55 +127,297 @@ h1 { font-size: clamp(30px, 4.4vw, 48px); font-weight: 700; letter-spacing: -.02
     <article class="panel" id="panel"></article>
   </div>
 
-  <p class="pie"><em>Herramientas revisadas en noviembre de 2026. Cambian rápido: sus funciones, precios y políticas de datos pueden variar. Antes de usar una, revise qué hace con lo que usted le entrega.</em><br>
+  <section class="support" aria-labelledby="obsidian-transversal"><h2 id="obsidian-transversal">Obsidian: un espacio transversal para pensar</h2><p>Zettelkasten es un método de notas conectadas; Obsidian es la herramienta digital para desarrollar esa práctica. Conserve preguntas, fichas, decisiones, memos y argumentos enlazados a lo largo del proceso. Su grafo muestra los enlaces entre notas: no genera por sí mismo evidencia ni interpretación.</p><p><a href="https://elverchaparrolab.wordpress.com/contenido/#obsidian" target="_top">Mi práctica con Obsidian y Zettelkasten</a> · <a href="https://obsidian.md/" target="_blank" rel="noreferrer noopener">Sitio oficial de Obsidian</a></p><p>Las notas se guardan en una bóveda local. La IA depende de integraciones opcionales: revise si envían contenido a servicios externos.</p></section>
+  <p class="pie"><em>Selección del catálogo de 81 herramientas, revisada en noviembre de 2026. No necesita utilizarlas todas: elija según su pregunta, método y condiciones de datos. <a href="https://elverchaparrolab.wordpress.com/ia-en-la-investigacion/#herramientas-por-fase" target="_top">Consultar el catálogo completo</a>. Cambian rápido: sus funciones, precios y políticas de datos pueden variar. Antes de usar una, revise qué hace con lo que usted le entrega.</em><br>
   Desarrollado por Elver Chaparro Cardozo · © 2026 · <a href="https://elverchaparrolab.wordpress.com/ia-en-la-investigacion/" target="_top">Volver a IA en la investigación</a></p>
 </div>
 
 <script>
 const R = "https://investigium.github.io/ruta-investigacion-ia/?v=3";
 const S = "https://elverchaparrolab.wordpress.com";
-const U = {"Elicit":"https://elicit.com","Consensus":"https://consensus.app","Semantic Scholar":"https://www.semanticscholar.org",
-  "Undermind":"https://www.undermind.ai","Perplexity":"https://www.perplexity.ai","ResearchRabbit":"https://www.researchrabbit.ai",
-  "Connected Papers":"https://www.connectedpapers.com","Litmaps":"https://www.litmaps.com","Scite":"https://scite.ai",
-  "Claude":"https://claude.ai","ChatGPT":"https://chatgpt.com","Gemini":"https://gemini.google.com","NotebookLM":"https://notebooklm.google.com",
-  "SciSpace":"https://scispace.com","Google Antigravity":"https://antigravity.google","VS Code":"https://code.visualstudio.com",
-  "Laboratorio ACD":S+"/metodologias/analisis-critico-del-discurso/","ATLAS.ti":S+"/contenido/atlas-ti/"};
+const U = {"ChatGPT": "https://chatgpt.com/", "Claude": "https://claude.ai/", "Consensus": "https://consensus.app/", "Perplexity": "https://www.perplexity.ai/", "STORM": "https://storm.genie.stanford.edu/", "Elicit": "https://elicit.com/", "Semantic Scholar": "https://www.semanticscholar.org/", "Undermind": "https://www.undermind.ai/", "SciSpace": "https://scispace.com/", "Ai2 Asta": "https://asta.allen.ai/", "ResearchRabbit": "https://www.researchrabbit.ai/", "Connected Papers": "https://www.connectedpapers.com/", "Litmaps": "https://www.litmaps.com/", "Rayyan": "https://www.rayyan.ai/", "ASReview": "https://asreview.nl/", "Scite": "https://scite.ai/", "Scholarcy": "https://www.scholarcy.com/", "Gemini Notebook (antes NotebookLM)": "https://notebook.google/", "Google Pinpoint": "https://journaliststudio.google.com/pinpoint/about/es_es/", "Otter.ai": "https://otter.ai/", "Trint": "https://trint.com/", "Sonix": "https://sonix.ai/", "Happy Scribe": "https://www.happyscribe.com/", "f4 (audiotranskription)": "https://www.audiotranskription.de/en/", "ATLAS.ti": "https://atlasti.com/ai-info", "MAXQDA (AI Assist y Tailwind)": "https://www.maxqda.com/about", "NVivo": "https://lumivero.com/products/nvivo/", "QualCoder": "https://qualcoder.wordpress.com/", "Delve": "https://delvetool.com/", "InfraNodus": "https://infranodus.com/", "Gemini": "https://gemini.google.com/"};
 
 const F = [
- {t:"Formular la pregunta", c:"#4fc3a1", capa:"Pregunta y objetivos",
-  prod:"Pregunta con población, fenómeno, contexto y alcance; objetivos.", retoma:"Punto de partida: su inquietud.",
-  ia:[[["ChatGPT"],"propone formulaciones alternativas de la pregunta"],[["Claude"],"prueba la coherencia entre pregunta, objetivos y método"],[["Perplexity"],"da un primer panorama para saber si el tema ya está estudiado"]],
-  decide:"Qué pregunta es viable y pertinente para su contexto.", ras:"Prompts, alternativas descartadas y por qué.", lim:"La IA no conoce su población ni su tiempo disponible.",
-  links:[["La fase en la Ruta",R+"#ruta"]]},
- {t:"Revisar la literatura", c:"#6fa8ff", capa:"Tabla de evidencia y vacío",
-  prod:"Tabla de evidencia y vacío de investigación.", retoma:"Retoma la pregunta.",
-  ia:[[["Elicit","Consensus","Semantic Scholar","Undermind"],"encuentran estudios y extraen datos para la tabla de evidencia"],[["ResearchRabbit","Connected Papers","Litmaps"],"muestran autores, redes y cómo evoluciona el campo"],[["Scite"],"indica si un estudio ha sido respaldado o contradicho"]],
-  decide:"Qué estudios entran según sus criterios, y cuál es el vacío.", ras:"Cadena de búsqueda, base, fecha, resultados y diagrama PRISMA.", lim:"Cubren poco SciELO y Redalyc. Referencia sin verificar, no se cita.",
-  vuelve:"Si la literatura muestra que la pregunta ya está resuelta o es muy amplia, se vuelve a la fase 1 y se ajusta.",
-  links:[["Revisión sistemática",R+"#rsl"],["Buscadores con IA",R+"#buscadores-ia"]]},
- {t:"Diseñar la metodología", c:"#a78bfa", capa:"Diseño e instrumentos",
-  prod:"Enfoque, diseño, técnicas e instrumentos por objetivo.", retoma:"Retoma el vacío.",
-  ia:[[["Claude"],"discute alternativas de diseño y revisa la matriz de coherencia"],[["NotebookLM"],"responde solo con sus textos de método, para fundamentar cada decisión"]],
-  decide:"El método, con los autores que lo respaldan.", ras:"Método elegido, alternativas consideradas y autores.", lim:"La IA mezcla enfoques y propone diseños genéricos.",
-  links:[["Metodologías",S+"/metodologias/"]]},
- {t:"Recoger los datos", c:"#f0b44c", capa:"Corpus con consentimientos",
-  prod:"Corpus organizado, con consentimientos.", retoma:"Retoma los instrumentos.",
-  ia:[[["VS Code"],"organiza carpetas, versiones y metadatos sin tocar los originales"]],
-  decide:"Qué se recoge, cómo y con qué consentimiento. Aquí la IA casi no entra.", ras:"Originales intactos, consentimientos y origen de cada dato.", lim:"Datos de participantes no van a la nube sin consentimiento.",
-  vuelve:"Si el piloto muestra que un instrumento no funciona, se vuelve a la fase 3 y se ajusta.",
-  links:[["Reglas de ética",R+"#reglas"]]},
- {t:"Analizar los datos", c:"#ec7a9a", capa:"Categorías y hallazgos",
-  prod:"Categorías y hallazgos con su evidencia.", retoma:"Retoma el corpus.",
-  ia:[[["Claude"],"propone códigos iniciales y lee transcripciones extensas"],[["ChatGPT"],"agrupa códigos en categorías y contrasta alternativas"],[["Gemini"],"describe imágenes y video en investigación visual"],[["Laboratorio ACD"],"analiza el discurso por niveles, de lo micro a lo macro"],[["ATLAS.ti"],"codifica y relaciona códigos con asistencia de IA"]],
-  decide:"La interpretación y cuándo hay saturación.", ras:"Libro de códigos con versiones: qué propuso la IA y qué aceptó usted.", lim:"Un código de IA no es un hallazgo hasta verificarlo contra el dato.",
-  vuelve:"Si no hay saturación, se vuelve a la fase 4 a recoger más datos.",
-  links:[["Laboratorio ACD",S+"/metodologias/analisis-critico-del-discurso/"]]},
- {t:"Escribir y revisar", c:"#9a9db2", capa:"Informe y declaración de IA",
-  prod:"Informe final y declaración de uso de IA.", retoma:"Retoma los hallazgos.",
-  ia:[[["Claude","ChatGPT"],"revisan estilo y coherencia, y marcan lo que falta"],[["SciSpace"],"ayuda a releer artículos al escribir la discusión"],[["Scite"],"verifica que cada cita respalde lo que usted afirma"],[["VS Code"],"escribe en Markdown o LaTeX con control de versiones"],[["Google Antigravity"],"crea herramientas propias de análisis"]],
-  decide:"El argumento y la autoría: la IA revisa, no escribe por usted.", ras:"Herramienta, tarea, fecha y qué revisó usted.", lim:"Revise la política de IA de su universidad o revista.",
-  vuelve:"Antes de la discusión, se vuelve a la fase 2 para actualizar la búsqueda.",
-  links:[["Rúbrica de coherencia",R+"#rubrica"],["Plantilla de trazabilidad","https://investigium.github.io/ruta-investigacion-ia/plantilla-trazabilidad.docx"]]},
+  {
+    "t": "Formular la pregunta",
+    "c": "#4fc3a1",
+    "capa": "Pregunta y objetivos",
+    "prod": "Pregunta situada, alcance y objetivos.",
+    "retoma": "Punto de partida: su inquietud.",
+    "ia": [
+      [
+        [
+          "ChatGPT",
+          "Claude"
+        ],
+        "proponen alternativas y ayudan a contrastar la coherencia de la pregunta"
+      ],
+      [
+        [
+          "Consensus",
+          "Perplexity"
+        ],
+        "exploran antecedentes; Perplexity también consulta la web general"
+      ],
+      [
+        [
+          "STORM"
+        ],
+        "explora perspectivas y un esquema inicial con fuentes web; no reemplaza una revisión académica"
+      ]
+    ],
+    "decide": "La pertinencia, el alcance y la viabilidad de su pregunta.",
+    "ras": "Alternativas, fuentes consultadas y razones para elegir la pregunta.",
+    "lim": "Verifique las fuentes originales y el contexto; una síntesis no demuestra un vacío.",
+    "links": [
+      [
+        "La fase en la Ruta",
+        "https://investigium.github.io/ruta-investigacion-ia/?v=3#ruta"
+      ]
+    ],
+    "obsidian": "Registre su inquietud, conecte conceptos y conserve las preguntas descartadas con sus razones."
+  },
+  {
+    "t": "Revisar la literatura",
+    "c": "#6fa8ff",
+    "capa": "Tabla de evidencia y vacío",
+    "prod": "Tabla de evidencia, criterios de selección y vacío argumentado.",
+    "retoma": "Retoma la pregunta.",
+    "ia": [
+      [
+        [
+          "Elicit",
+          "Consensus",
+          "Semantic Scholar",
+          "Undermind"
+        ],
+        "apoyan el descubrimiento de estudios; Elicit también ayuda a extraer datos en tablas"
+      ],
+      [
+        [
+          "SciSpace",
+          "Ai2 Asta"
+        ],
+        "apoyan la búsqueda y la lectura con referencias que debe comprobar"
+      ],
+      [
+        [
+          "ResearchRabbit",
+          "Connected Papers",
+          "Litmaps"
+        ],
+        "exploran relaciones bibliográficas; Connected Papers muestra similitud, no un árbol directo de citas"
+      ],
+      [
+        [
+          "Rayyan",
+          "ASReview"
+        ],
+        "apoyan el cribado y la priorización; usted aplica y documenta los criterios"
+      ],
+      [
+        [
+          "Scite",
+          "Scholarcy"
+        ],
+        "ayudan a revisar contextos de citación y a preparar fichas de lectura, respectivamente"
+      ]
+    ],
+    "decide": "Qué estudios entran, la calidad de la evidencia y qué vacío puede sostener.",
+    "ras": "Base, búsqueda, fecha, duplicados, exclusiones y tabla de evidencia.",
+    "lim": "Ningún servicio garantiza exhaustividad. Scite clasifica contextos de citas: no certifica por sí solo que una afirmación sea verdadera.",
+    "links": [
+      [
+        "Revisión sistemática",
+        "https://investigium.github.io/ruta-investigacion-ia/?v=3#rsl"
+      ],
+      [
+        "Catálogo: literatura y gestión",
+        "https://elverchaparrolab.wordpress.com/ia-en-la-investigacion/#ia-fase-2"
+      ]
+    ],
+    "obsidian": "Escriba fichas bibliográficas y notas propias, enlace conceptos y distinga citas literales de interpretaciones.",
+    "vuelve": "Si los antecedentes muestran una pregunta resuelta o demasiado amplia, vuelva a formularla."
+  },
+  {
+    "t": "Diseñar la metodología",
+    "c": "#a78bfa",
+    "capa": "Diseño e instrumentos",
+    "prod": "Enfoque, método, muestreo, técnicas e instrumentos justificados.",
+    "retoma": "Retoma la pregunta y la literatura.",
+    "ia": [
+      [
+        [
+          "Claude",
+          "ChatGPT"
+        ],
+        "ayudan a contrastar alternativas de diseño y a revisar la matriz de coherencia"
+      ],
+      [
+        [
+          "Gemini Notebook (antes NotebookLM)"
+        ],
+        "permite consultar las fuentes metodológicas aportadas y revisar sus referencias"
+      ]
+    ],
+    "decide": "El método y su coherencia con la pregunta, apoyándose en autores y fuentes originales.",
+    "ras": "Decisiones, alternativas consideradas, autores y versiones de instrumentos.",
+    "lim": "El método lo elige y fundamenta usted. Los modelos pueden mezclar enfoques o inventar referencias.",
+    "links": [
+      [
+        "Metodologías y laboratorios",
+        "https://elverchaparrolab.wordpress.com/metodologias/"
+      ]
+    ],
+    "obsidian": "Mantenga una nota de decisiones metodológicas enlazada a sus objetivos, autores e instrumentos."
+  },
+  {
+    "t": "Recoger los datos",
+    "c": "#f0b44c",
+    "capa": "Corpus con consentimientos",
+    "prod": "Corpus documentado, transcripciones revisadas y consentimientos.",
+    "retoma": "Retoma los instrumentos.",
+    "ia": [
+      [
+        [
+          "Google Pinpoint"
+        ],
+        "ayuda a explorar documentos y a transcribir grabaciones; compruebe la disponibilidad de cada función"
+      ],
+      [
+        [
+          "Otter.ai",
+          "Trint",
+          "Sonix",
+          "Happy Scribe"
+        ],
+        "proponen transcripciones que debe cotejar con el audio y el idioma de sus participantes"
+      ],
+      [
+        [
+          "f4 (audiotranskription)"
+        ],
+        "reúne transcripción y preparación de entrevistas para su análisis"
+      ]
+    ],
+    "decide": "Qué recoger, con qué consentimiento y qué transcripción representa fielmente lo dicho.",
+    "ras": "Originales intactos, origen, consentimiento, hablantes y correcciones de transcripción.",
+    "lim": "Una plataforma externa puede recibir audio y texto. Revise consentimiento, condiciones de datos y alternativas locales antes de cargar material.",
+    "links": [
+      [
+        "Ética y datos",
+        "https://investigium.github.io/ruta-investigacion-ia/?v=3#reglas"
+      ],
+      [
+        "Catálogo: preparación del corpus",
+        "https://elverchaparrolab.wordpress.com/ia-en-la-investigacion/#ia-fase-4"
+      ]
+    ],
+    "obsidian": "Lleve el diario de campo y los metadatos autorizados; enlace las notas sin publicar datos identificables.",
+    "vuelve": "Si el piloto muestra problemas en un instrumento, vuelva al diseño metodológico."
+  },
+  {
+    "t": "Analizar los datos",
+    "c": "#ec7a9a",
+    "capa": "Interpretaciones y evidencia",
+    "prod": "Interpretaciones y hallazgos con evidencia, según el método elegido.",
+    "retoma": "Retoma el corpus revisado.",
+    "ia": [
+      [
+        [
+          "ATLAS.ti",
+          "MAXQDA (AI Assist y Tailwind)",
+          "NVivo"
+        ],
+        "ofrecen funciones opcionales de IA para consultar, resumir o apoyar la codificación; revise versión, licencia y servicio"
+      ],
+      [
+        [
+          "QualCoder",
+          "Delve"
+        ],
+        "permiten análisis cualitativo con apoyos opcionales de IA; revise dónde se procesan los datos"
+      ],
+      [
+        [
+          "InfraNodus"
+        ],
+        "explora redes textuales y conexiones temáticas; un grafo no sustituye la interpretación"
+      ],
+      [
+        [
+          "Claude",
+          "ChatGPT",
+          "Gemini"
+        ],
+        "proponen lecturas o contrastes de textos e imágenes que requieren comprobación contra el corpus"
+      ]
+    ],
+    "decide": "La interpretación, la pertinencia de cada propuesta y la suficiencia de evidencia según su enfoque.",
+    "ras": "Fragmento original, memo, cambios y propuestas de IA aceptadas o descartadas con justificación.",
+    "lim": "La codificación o la saturación no son exigencias universales. En ACD, fenomenología y Rizoma respete los criterios propios de cada método. MAXQDA AI Assist y Tailwind son productos distintos.",
+    "links": [
+      [
+        "Método y laboratorio ACD",
+        "https://elverchaparrolab.wordpress.com/metodologias/analisis-critico-del-discurso/"
+      ],
+      [
+        "Laboratorios metodológicos",
+        "https://elverchaparrolab.wordpress.com/#laboratorios"
+      ],
+      [
+        "Catálogo: análisis",
+        "https://elverchaparrolab.wordpress.com/ia-en-la-investigacion/#ia-fase-5"
+      ]
+    ],
+    "obsidian": "Conecte memos, fragmentos autorizados y argumentos; el grafo visualiza enlaces registrados, no demuestra relaciones causales.",
+    "vuelve": "Si faltan contrastes o evidencia, revise el corpus y decida si necesita recoger más datos."
+  },
+  {
+    "t": "Escribir y revisar",
+    "c": "#9a9db2",
+    "capa": "Informe y declaración de IA",
+    "prod": "Argumento, informe y declaración del uso de IA.",
+    "retoma": "Retoma las interpretaciones y su evidencia.",
+    "ia": [
+      [
+        [
+          "Claude",
+          "ChatGPT",
+          "Gemini"
+        ],
+        "ayudan a revisar claridad, estructura y coherencia del borrador"
+      ],
+      [
+        [
+          "SciSpace",
+          "Gemini Notebook (antes NotebookLM)"
+        ],
+        "ayudan a volver a las fuentes durante la discusión; compruebe cada pasaje citado"
+      ],
+      [
+        [
+          "Scite"
+        ],
+        "permite examinar el contexto de las citas; la adecuación de la cita al argumento debe revisarla usted"
+      ]
+    ],
+    "decide": "El argumento, la autoría y la versión final.",
+    "ras": "Herramienta, tarea, fecha, fuentes, cambios y revisión humana.",
+    "lim": "No atribuya a una fuente lo que no dice. Revise la política de IA de su universidad o revista.",
+    "links": [
+      [
+        "Rúbrica de coherencia",
+        "https://investigium.github.io/ruta-investigacion-ia/?v=3#rubrica"
+      ],
+      [
+        "Plantilla de trazabilidad",
+        "https://investigium.github.io/ruta-investigacion-ia/plantilla-trazabilidad.docx"
+      ]
+    ],
+    "obsidian": "Transforme notas conectadas en un esquema de escritura y mantenga cada argumento enlazado a su evidencia.",
+    "vuelve": "Antes de cerrar la discusión, actualice la búsqueda bibliográfica."
+  }
 ];
 // Retornos: [desde, hacia]
 const RET = [[1,0],[3,2],[4,3],[5,1]];
@@ -219,17 +475,20 @@ function mostrar(i) {
   panel.innerHTML = `<div class="fade">
     <div class="n">${String(i+1).padStart(2,"0")}</div><h2>${f.t}</h2><div class="retoma">${f.retoma}</div>
     <div class="lbl">Produce</div><p>${f.prod}</p>
-    <div class="lbl c">La IA ayuda a</div>
+    <div class="lbl c">Herramientas con funciones de IA</div>
     <ul class="ias">${f.ia.map(([ns, t]) => `<li><span>${ns.map(n => `<a class="chip" href="${U[n]}" target="_blank" rel="noreferrer noopener">${n}</a>`).join(" ")}</span><span>${t}.</span></li>`).join("")}</ul>
+    <section class="support"><h3>Obsidian · notas y conexiones, sin IA obligatoria</h3><p>${f.obsidian}</p><p><a href="${S}/contenido/#obsidian" target="_top">Ver mi práctica con Obsidian</a></p></section>
     <div class="lbl">Usted decide</div><p>${f.decide}</p>
     <div class="dos"><div><div class="lbl">Deje registrado</div><p>${f.ras}</p></div><div><div class="lbl">Cuidado</div><p>${f.lim}</p></div></div>
     ${f.vuelve ? `<div class="vuelve">↺ ${f.vuelve}</div>` : ""}
-    <div class="links">${f.links.map(([t, u]) => link(t + " →", u)).join("")}</div></div>`;
+    <div class="links">${f.links.map(([t, u]) => link(t, u)).join("")}</div></div>`;
 }
 
 // Recorrido automático hasta que el visitante interactúe
 let actual = 0, auto = setInterval(() => { actual = (actual + 1) % F.length; mostrar(actual); }, 4500);
 const parar = () => { clearInterval(auto); auto = null; };
+panel.addEventListener("pointerenter", parar);
+panel.addEventListener("focusin", parar);
 nodos.forEach((g, i) => {
   const ir = () => { parar(); actual = i; mostrar(i); };
   g.addEventListener("mouseenter", ir); g.addEventListener("click", ir); g.addEventListener("focus", ir);
